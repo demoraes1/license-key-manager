@@ -1,4 +1,4 @@
-{% extends "base.html" %} {% block title %}CPanel | Products{% endblock %} {%
+{% extends "base.html" %} {% block title %}CPanel | Produtos{% endblock %} {%
 block second %}text-gray-600 bg-gray-50 dark:bg-gray-700{% endblock %} {% block
 content %}
 <main>
@@ -85,7 +85,7 @@ content %}
               class="copy-button w-28 mx-1 px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-sky-600 hover:bg-sky-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:bg-sky-500 dark:hover:bg-sky-600 transition-all duration-300"
               content="{{ product.apiK }}"
             >
-              API Key
+              Chave API
             </button>
             <button
               type="button"
@@ -93,7 +93,7 @@ content %}
               class="copy-button w-29 mx-1 px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-sky-600 hover:bg-sky-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:bg-sky-500 dark:hover:bg-sky-600 transition-all duration-300"
               content="{{ pubKey }}"
             >
-              Public Key (PEM)
+              Chave Pública (PEM)
             </button>
             <button
               type="button"
@@ -101,7 +101,7 @@ content %}
               class="copy-button w-29 mx-1 px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-sky-600 hover:bg-sky-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:bg-sky-500 dark:hover:bg-sky-600 transition-all duration-300"
               content="{{ pubKeyXML }}"
             >
-              Public Key (XML)
+              Chave Pública (XML)
             </button>
           </div>
         </div>
@@ -143,7 +143,7 @@ content %}
                   <h2
                     class="mt-6 text-sm font-medium text-gray-900 dark:text-gray-300"
                   >
-                    Description:
+                    Descrição:
                   </h2>
                   <div
                     class="mt-2 prose prose-sm text-gray-500 max-h-32 overflow-y-auto dark:text-slate-400"
@@ -178,7 +178,7 @@ content %}
                         <span
                           class="mt-4 text-sm font-medium text-gray-900 dark:text-slate-100"
                         >
-                          Licenses
+                          Licenças
                         </span>
                       </dt>
                       <dd
@@ -211,7 +211,7 @@ content %}
                         <span
                           class="mt-4 text-sm font-medium text-gray-900 dark:text-slate-100"
                         >
-                          Clients
+                          Clientes
                         </span>
                       </dt>
                       <dd
@@ -233,14 +233,14 @@ content %}
         <h1
           class="mt-5 mb-2 font-semibold text-gray-900 text-2xl dark:text-gray-100"
         >
-          Product Licenses
+          Licenças do Produto
         </h1>
         <button
           type="button"
           class="w-fit px-4 py-2 mt-5 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-sky-600 hover:bg-sky-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:bg-sky-500 dark:hover:bg-sky-600 transition-all duration-300"
           data-modal-toggle="creation-modal"
         >
-          Create License
+          Criar Licença
         </button>
       </div>
 
@@ -261,7 +261,7 @@ content %}
                     <p
                       class="text-sm font-medium text-blue-600 truncate dark:text-sky-500"
                     >
-                      License #{{license.id}}
+                      Licença #{{license.id}}
                     </p>
                     <p
                       class="mt-2 flex items-center text-sm text-gray-500 dark:text-gray-300"
@@ -287,19 +287,19 @@ content %}
                   <div class="hidden md:block">
                     <div>
                       <p class="text-sm text-gray-900 dark:text-gray-400">
-                        Client: '{{license.name}}'
+                        Cliente: '{{license.name}}'
                       </p>
                       <p
                         class="mt-2 flex items-center text-sm text-gray-500 dark:text-gray-300"
                       >
-                        Devices: {{license.devices}}/{{license.maxdevices}}
+                        Dispositivos: {{license.devices}}/{{license.maxdevices}}
                       </p>
                     </div>
                   </div>
                   <div class="hidden md:block">
                     <div>
                       <p class="text-sm text-gray-900 dark:text-gray-300">
-                        Expires on
+                        Expira em
                         <time class="timestamp replace-parent"
                           >{{license.expirydate}}</time
                         >
@@ -319,7 +319,7 @@ content %}
                             clip-rule="evenodd"
                           />
                         </svg>
-                        Awaiting Activation
+                        Aguardando Ativação
                       </p>
                       {% elif license.status == 1 %}
                       <p class="mt-2 flex items-center text-sm text-green-400">
@@ -336,7 +336,7 @@ content %}
                             clip-rule="evenodd"
                           />
                         </svg>
-                        Active
+                        Ativa
                       </p>
                       {% elif license.status == 2 %}
                       <p class="mt-2 flex items-center text-sm text-red-400">
@@ -354,7 +354,7 @@ content %}
                             d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                           />
                         </svg>
-                        Revoked
+                        Revogada
                       </p>
                       {% else %}
                       <p class="mt-2 flex items-center text-sm text-red-400">
@@ -372,7 +372,7 @@ content %}
                             d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                           />
                         </svg>
-                        Expired
+                        Expirada
                       </p>
                       {% endif %}
                     </div>
@@ -426,11 +426,11 @@ content %}
                 <h1
                   class="text-4xl font-extrabold text-yellow-700 tracking-tight sm:text-5xl"
                 >
-                  No Product Licenses ...
+                  Nenhuma Licença do Produto ...
                 </h1>
                 <p class="mt-1 text-base text-gray-500 dark:text-slate-400">
-                  Currently, this product doesn't have any licenses attached to
-                  it. You can fix that by creating one first!
+                  Atualmente, este produto não possui licenças associadas.
+                  Você pode resolver isso criando uma primeiro!
                 </p>
               </div>
             </div>
@@ -462,11 +462,11 @@ content %}
                 <h1
                   class="text-4xl font-extrabold text-red-900 tracking-tight sm:text-5xl dark:text-red-800"
                 >
-                  License creation disabled
+                  Criação de licença desabilitada
                 </h1>
                 <p class="mt-1 text-base text-gray-500 dark:text-slate-400">
-                  There must be at least one registered customer in the web
-                  application to create a product license.
+                  Deve haver pelo menos um cliente cadastrado na aplicação web
+                  para criar uma licença de produto.
                 </p>
               </div>
               <div
@@ -476,13 +476,13 @@ content %}
                   href="{{ url_for('main.customers') }}"
                   class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-rose-800 hover:bg-rose-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                 >
-                  Check Customers
+                  Ver Clientes
                 </a>
                 <a
                   href="{{ url_for('main.products') }}"
                   class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-red-700 bg-red-100 hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                 >
-                  Return to Products
+                  Voltar para Produtos
                 </a>
               </div>
             </div>
@@ -508,7 +508,7 @@ content %}
         class="flex justify-between items-center p-5 rounded-t border-b dark:border-slate-600"
       >
         <h3 class="text-xl font-medium text-gray-900 dark:text-gray-100">
-          Create License
+          Criar Licença
         </h3>
         <button
           type="button"
@@ -536,19 +536,19 @@ content %}
             <div class="col-span-6 sm:col-span-3">
               <label
                 class="text-sm font-medium text-gray-900 block mb-2 dark:text-gray-100"
-                >Maximum Devices</label
+                >Dispositivos Máximos</label
               >
               <input
                 type="number"
                 id="keyDeviceMax"
                 class="dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
-                placeholder="Device linking limit"
+                placeholder="Limite de vinculação de dispositivos"
               />
             </div>
             <div class="col-span-6 sm:col-span-3">
               <label
                 class="text-sm font-medium text-gray-900 block mb-2 dark:text-gray-100"
-                >Expiry Date</label
+                >Data de Expiração</label
               >
               <input
                 type="date"
@@ -560,7 +560,7 @@ content %}
             <div class="col-span-full">
               <label
                 class="text-sm font-medium text-gray-900 block mb-2 dark:text-gray-100"
-                >Assign a client</label
+                >Atribuir um cliente</label
               >
               <div>
                 <div class="mt-1 relative">
@@ -640,7 +640,7 @@ content %}
           type="button"
           class="text-white bg-green-700 hover:bg-gray-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
         >
-          Create
+          Criar
         </button>
       </div>
     </div>
@@ -698,7 +698,7 @@ content %}
             data-modal-toggle="copy-modal"
             class="inline-flex justify-center w-full rounded-md border border-transparent shadow-sm px-4 py-2 bg-indigo-600 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:text-sm"
           >
-            Alright
+            Ok
           </button>
         </div>
       </div>
@@ -787,10 +787,10 @@ content %}
           }
         } else {
           console.error(
-            "The request failed to be executed. Your input is most likely invalid or you have modified the contents. If you think this is a bug, please report it."
+            "A requisição falhou ao ser executada. Sua entrada provavelmente é inválida ou você modificou o conteúdo. Se você acha que isso é um bug, por favor reporte."
           );
           hideLoader();
-          showAlert("The Server failed to accept your input.");
+          showAlert("O servidor falhou ao aceitar sua entrada.");
         }
       }
     };
@@ -809,10 +809,10 @@ content %}
 
     if (index == 0)
       document.getElementById("copy-title").innerHTML =
-        "API Key copied to clipboard";
+        "Chave API copiada para a área de transferência";
     else
       document.getElementById("copy-title").innerHTML =
-        "Public Key copied to clipboard";
+        "Chave Pública copiada para a área de transferência";
   }
 </script>
 {% endblock %}
