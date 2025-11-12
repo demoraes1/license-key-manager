@@ -1,0 +1,20 @@
+{
+  "name": "license-manager-electron-example",
+  "version": "1.0.0",
+  "description": "Exemplo de integração do License Key Manager em aplicações Electron",
+  "main": "example.js",
+  "scripts": {
+    "test": "node example.js"
+  },
+  "keywords": [
+    "license",
+    "validation",
+    "electron",
+    "nodejs"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {}
+}
+

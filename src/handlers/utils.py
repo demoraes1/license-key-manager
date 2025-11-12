@@ -57,8 +57,12 @@ def validateEmail(email):
 
 
 def validatePhone(phoneNumber):
-    if(not str(phoneNumber).isnumeric() and not re.fullmatch(r'\+[0-9]* [0-9]*', phoneNumber)):
+    if phoneNumber is None:
         raise Exception("- Invalid Phone Number")
+    # Aceita apenas 11 dígitos contínuos (DDD + 9 números)
+    phone_str = str(phoneNumber).strip()
+    if not phone_str.isnumeric() or len(phone_str) != 11:
+        raise Exception("- Invalid Phone Number (must be 11 digits: DDD + 9 numbers)")
 
 
 def validateName(name):
