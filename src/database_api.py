@@ -113,6 +113,17 @@ def editProduct(productid, name, category, image, details):
     db.session.commit()
 
 
+def deleteProduct(productid):
+    """
+        Deletes a Product from the database.
+        Note: This will cascade delete all associated licenses due to the relationship.
+    """
+    product = Product.query.filter_by(id=productid).first()
+    if product is not None:
+        db.session.delete(product)
+        db.session.commit()
+
+
 def getProductThroughAPI(apiKey):
     return Product.query.filter_by(apiK=apiKey).first()
 

@@ -3,6 +3,7 @@ from flask import render_template, request
 from flask_login import current_user
 from .. import database_api as DBAPI
 from . import utils as Utils
+import json
 
 
 def displayProductList():
@@ -63,3 +64,20 @@ def editProduct(requestData):
     DBAPI.submitLog(None, adminAcc.id, 'EditedProduct', '$$' +
                     str(adminAcc.name) + '$$ modified the data details of product #' + str(id))
     return "SUCCESS"
+
+
+def deleteProduct(productid):
+    adminAcc = current_user
+    
+    product = DBAPI.getProductByID(productid)
+    if product is None:
+        return Utils.render404("Produto não encontrado", "Desculpe, mas o produto que você indicou não existe...")
+    
+    try:
+        productName = product.name
+        DBAPI.deleteProduct(productid)
+        DBAPI.submitLog(None, adminAcc.id, 'DeletedProduct', '$$' +
+                        str(adminAcc.name) + '$$ excluiu o produto "' + str(productName) + '" (ID: #' + str(productid) + ')')
+        return "SUCCESS"
+    except Exception as e:
+        return json.dumps({'code': "ERROR", 'message': f'Erro ao excluir produto: {str(e)}'}), 500

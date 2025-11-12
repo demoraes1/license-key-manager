@@ -64,6 +64,12 @@ def editProduct():
     return ProductHandler.editProduct(request.get_json())
 
 
+@main.route('/products/delete/<productid>', methods=['POST'])
+@login_required
+def deleteProduct(productid):
+    return ProductHandler.deleteProduct(productid)
+
+
 @main.route('/clearcheck/<productid>')
 @login_required
 def clearProductCheck(productid):
