@@ -17,8 +17,15 @@ def displayLicense(licenseID):
 
     try:
         licenseEntry = DBAPI.getKeyAndClient(licenseID)
-        if(licenseEntry.expirydate != 0 and licenseEntry.status != 3 and licenseEntry.expirydate < int(time())):
-            licenseEntry = DBAPI.applyExpirationState(licenseEntry.id)
+        # Verificar expiração considerando o tipo
+        expiryType = getattr(licenseEntry, 'expirytype', 0)
+        expiryDays = getattr(licenseEntry, 'expirydays', None)
+        activationDate = getattr(licenseEntry, 'activationdate', None)
+        
+        if licenseEntry.expirydate != 0 and licenseEntry.status != 3:
+            from .validation import validateExpirationDate
+            if not validateExpirationDate(licenseEntry.expirydate, expiryType, expiryDays, activationDate):
+                licenseEntry = DBAPI.applyExpirationState(licenseEntry.id)
         changelog = DBAPI.getKeyLogs(licenseID)
         changelog.reverse()
         devices = DBAPI.getKeyHWIDs(licenseID)
@@ -42,16 +49,28 @@ def createLicense(productID, requestData):
     client = requestData.get('idclient')
     maxDevices = requestData.get('maxdevices')
     expiryDate = requestData.get('expirydate')
+    expiryType = requestData.get('expirytype', 0)  # 0 = data fixa, 1 = dias
+    expiryDays = requestData.get('expirydays', None)
 
-    validationR = Utils.validateMultiple_License(
-        client, maxDevices, expiryDate)
-    if not validationR == "":
-        return json.dumps({'code': "ERROR", 'message': "Incorrect input: \n" + str(validationR)}), 500
+    # Validação baseada no tipo de expiração
+    if expiryType == 1:
+        # Modelo de dias: validar dias e não data
+        if expiryDays is None or not str(expiryDays).isnumeric() or int(expiryDays) <= 0:
+            return json.dumps({'code': "ERROR", 'message': "Incorrect input: \n- Invalid Expiry Days (must be >= 1)"}), 500
+        expiryDays = int(expiryDays)
+        expiryDate = 0  # Para modelo de dias, expirydate será calculado na ativação
+    else:
+        # Modelo de data fixa: validar data normalmente
+        validationR = Utils.validateMultiple_License(
+            client, maxDevices, expiryDate)
+        if not validationR == "":
+            return json.dumps({'code': "ERROR", 'message': "Incorrect input: \n" + str(validationR)}), 500
+        expiryDate = int(expiryDate)
 
     try:
         serialKey = generateSerialKey(20)
         keyId = DBAPI.createKey(productID, int(
-            client), serialKey, int(maxDevices), int(expiryDate))
+            client), serialKey, int(maxDevices), expiryDate, int(expiryType), expiryDays)
         DBAPI.submitLog(keyId, adminAcc.id, 'CreatedKey', '$$' + str(adminAcc.name) +
                         '$$ created license #' + str(keyId) + ' for product #' + str(productID))
     except Exception as exp:

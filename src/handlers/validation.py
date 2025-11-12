@@ -47,7 +47,11 @@ def handleExistingState(keyObject, decryptedData):
         Handles the situation where a device is already linked to the specified license. 
         In this situation, the method merely checks whether or not the license is still valid.
     """
-    if(validateExpirationDate(keyObject.expirydate)):
+    expiryType = getattr(keyObject, 'expirytype', 0)
+    expiryDays = getattr(keyObject, 'expirydays', None)
+    activationDate = getattr(keyObject, 'activationdate', None)
+    
+    if(validateExpirationDate(keyObject.expirydate, expiryType, expiryDays, activationDate)):
         return responseMessage(200, 'OKAY', 'OKAY STATUS :: This device is still registered and everything is okay.', decryptedData, keyObject.expirydate)
     else:
         DBAPI.applyExpirationState(keyObject.id)
@@ -65,7 +69,11 @@ def handleNonExistingState(keyObject, decryptedData):
         return responseMessage(403, 'ERR_KEY_REVOKED', 'ERROR :: The key was revoked. Your request was valid but the license is disabled until further notice.', decryptedData, keyObject.expirydate)
 
     # STEP 2 :: Check if the License has expired. If that's the case, then the validation should be interrupted with an error.
-    if(not validateExpirationDate(keyObject.expirydate)):
+    expiryType = getattr(keyObject, 'expirytype', 0)
+    expiryDays = getattr(keyObject, 'expirydays', None)
+    activationDate = getattr(keyObject, 'activationdate', None)
+    
+    if(not validateExpirationDate(keyObject.expirydate, expiryType, expiryDays, activationDate)):
         DBAPI.applyExpirationState(keyObject.id)
         return responseMessage(400, 'ERR_KEY_EXPIRED', 'ERROR :: This license is no longer valid and will not admit any new devices.', decryptedData, keyObject.expirydate)
 
@@ -109,13 +117,27 @@ def generateLogContents(requestData, responseMsg):
 
 
 # MERELY AUXILIARY FUNCTIONS
-def validateExpirationDate(expiryDate):
+def validateExpirationDate(expiryDate, expiryType=0, expiryDays=None, activationDate=None):
     """
         Verifies the state of the current expiration date. 
         If the license is still valid, the method returns True. Otherwise, it returns false.
+        expiryType: 0 = data fixa, 1 = dias a partir da ativação
     """
     if(expiryDate == 0):
         return True
+    
+    # Modelo de dias a partir da ativação
+    if expiryType == 1 and expiryDays is not None:
+        # Se ainda não foi ativada, não expirou
+        if activationDate is None:
+            return True
+        # Calcular data de expiração baseada na ativação
+        calculatedExpiry = activationDate + (expiryDays * 86400)
+        if(math.floor(time.time()) > int(calculatedExpiry)):
+            return False
+        return True
+    
+    # Modelo de data fixa (comportamento original)
     if(math.floor(time.time()) > int(expiryDate)):
         return False
     return True

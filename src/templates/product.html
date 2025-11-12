@@ -548,13 +548,39 @@ content %}
             <div class="col-span-6 sm:col-span-3">
               <label
                 class="text-sm font-medium text-gray-900 block mb-2 dark:text-gray-100"
+                >Tipo de Expiração</label
+              >
+              <select
+                id="expiryType"
+                class="dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
+                onchange="toggleExpiryFields()"
+              >
+                <option value="0">Data Fixa</option>
+                <option value="1">Dias a partir da Ativação</option>
+              </select>
+            </div>
+            <div class="col-span-6 sm:col-span-3" id="expiryDateContainer">
+              <label
+                class="text-sm font-medium text-gray-900 block mb-2 dark:text-gray-100"
                 >Data de Expiração</label
               >
               <input
                 type="date"
                 id="expiryDate"
                 class="dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
-                placeholder="Software"
+              />
+            </div>
+            <div class="col-span-6 sm:col-span-3 hidden" id="expiryDaysContainer">
+              <label
+                class="text-sm font-medium text-gray-900 block mb-2 dark:text-gray-100"
+                >Dias de Validade</label
+              >
+              <input
+                type="number"
+                id="expiryDays"
+                min="1"
+                class="dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
+                placeholder="Ex: 30"
               />
             </div>
             <div class="col-span-full">
@@ -756,20 +782,50 @@ content %}
 <script>
   convertAllTimestamps();
 
+  function toggleExpiryFields() {
+    const expiryType = document.getElementById("expiryType").value;
+    const dateContainer = document.getElementById("expiryDateContainer");
+    const daysContainer = document.getElementById("expiryDaysContainer");
+    
+    if (expiryType == "1") {
+      dateContainer.classList.add("hidden");
+      daysContainer.classList.remove("hidden");
+    } else {
+      dateContainer.classList.remove("hidden");
+      daysContainer.classList.add("hidden");
+    }
+  }
+
   document
     .getElementById("submitLicense")
     .addEventListener("click", createLicense);
   function createLicense() {
     showLoader();
 
+    const expiryType = parseInt(document.getElementById("expiryType").value);
     let licenseData = {
       idclient: parseInt(clientIDC.innerText.replace(/^\D+/g, "")),
       maxdevices: parseInt(maxDevicesC.value),
-      expirydate:
+      expirytype: expiryType,
+    };
+
+    if (expiryType == 1) {
+      // Modelo de dias
+      const expiryDays = document.getElementById("expiryDays").value;
+      if (!expiryDays || expiryDays <= 0) {
+        hideLoader();
+        showAlert("Por favor, informe o número de dias de validade.");
+        return;
+      }
+      licenseData.expirydays = parseInt(expiryDays);
+      licenseData.expirydate = 0; // Será calculado na ativação
+    } else {
+      // Modelo de data fixa
+      licenseData.expirydate =
         expiryDateC.value == ""
           ? 0
-          : new Date(expiryDateC.value).getTime() / 1000,
-    };
+          : new Date(expiryDateC.value).getTime() / 1000;
+    }
 
     path = "/product/" + "{{product.id}}" + "/createlicense";
     let httpRequest = new XMLHttpRequest();

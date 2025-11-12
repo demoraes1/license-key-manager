@@ -54,6 +54,9 @@ class Key(db.Model):
     devices = db.Column(db.Integer)
     status = db.Column(db.Integer)
     expirydate = db.Column(db.Integer, nullable=False)
+    expirytype = db.Column(db.Integer, nullable=False, default=0)  # 0 = data fixa, 1 = dias a partir da ativação
+    expirydays = db.Column(db.Integer, nullable=True, default=None)  # Número de dias (quando expirytype = 1)
+    activationdate = db.Column(db.Integer, nullable=True, default=None)  # Timestamp de quando foi ativada
     registrations = db.relationship(
         'Registration', cascade='all,delete', backref='key')
     changelogs = db.relationship(

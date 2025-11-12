@@ -159,13 +159,15 @@ def getKeysBySerialKey(serialKey, productID):
     return Key.query.filter_by(serialkey=serialKey, productid=productID).first()
 
 
-def createKey(productid, clientid, serialkey, maxdevices, expiryDate):
+def createKey(productid, clientid, serialkey, maxdevices, expiryDate, expiryType=0, expiryDays=None):
     """
-        Creates a new Product and stores it in the database.
-        The function returns the id of the newly created product.
+        Creates a new License Key and stores it in the database.
+        expiryType: 0 = data fixa (expiryDate), 1 = dias a partir da ativação (expiryDays)
+        The function returns the id of the newly created key.
     """
     newKey = Key(productid=productid, clientid=clientid, serialkey=serialkey,
-                 maxdevices=maxdevices, devices=0, status=0, expirydate=expiryDate)
+                 maxdevices=maxdevices, devices=0, status=0, expirydate=expiryDate,
+                 expirytype=expiryType, expirydays=expiryDays, activationdate=None)
     db.session.add(newKey)
     db.session.commit()
     return newKey.id
@@ -206,7 +208,7 @@ def getKeyAndClient(keyid):
         raise Exception("Invalid input - Denying database querying!")
 
     return db.engine.execute("""
-    SELECT * FROM key JOIN (select id as cid, name from client) ON cid = key.clientid where Key.id = """ + str(keyid)
+    SELECT key.*, client.id as cid, client.name FROM key JOIN client ON client.id = key.clientid WHERE key.id = """ + str(keyid)
                              ).fetchone()
 
 
@@ -222,8 +224,24 @@ def updateKeyStatesFromProduct(productid):
         print("Not yet checked.")
         licenseList = Key.query.filter_by(productid=productid).all()
         for licenseEntry in licenseList:
-            if(currentMidnight >= licenseEntry.expirydate and licenseEntry.expirydate != 0):
-                licenseEntry.status = 3
+            if licenseEntry.expirydate == 0:
+                continue
+            
+            # Verificar expiração baseado no tipo
+            expiryType = getattr(licenseEntry, 'expirytype', 0)
+            expiryDays = getattr(licenseEntry, 'expirydays', None)
+            activationDate = getattr(licenseEntry, 'activationdate', None)
+            
+            if expiryType == 1 and expiryDays is not None:
+                # Modelo de dias: só verifica se já foi ativada
+                if activationDate is not None:
+                    calculatedExpiry = activationDate + (expiryDays * 86400)
+                    if currentMidnight >= calculatedExpiry:
+                        licenseEntry.status = 3
+            else:
+                # Modelo de data fixa (comportamento original)
+                if currentMidnight >= licenseEntry.expirydate:
+                    licenseEntry.status = 3
         product.lastchecked = int(time())
     db.session.commit()
 
@@ -301,6 +319,13 @@ def addRegistration(keyID, hardwareID, keyObject):
     keyObject.devices = newActiveDevices
     if(keyObject.status != 1):
         keyObject.status = 1
+        # Se a licença está sendo ativada pela primeira vez e usa modelo de dias, salvar data de ativação
+        if keyObject.activationdate is None:
+            from time import time
+            keyObject.activationdate = int(time())
+            # Se for modelo de dias, calcular a data de expiração baseada na ativação
+            if keyObject.expirytype == 1 and keyObject.expirydays is not None:
+                keyObject.expirydate = keyObject.activationdate + (keyObject.expirydays * 86400)
 
     # Submit all changes
     db.session.commit()
