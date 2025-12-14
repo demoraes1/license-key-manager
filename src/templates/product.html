@@ -3,73 +3,45 @@ block second %}text-gray-600 bg-gray-50 dark:bg-gray-700{% endblock %} {% block
 content %}
 <main>
   <div
-    class="p-4 bg-white block sm:flex items-center justify-between border-b border-gray-200 lg:mt-1.5 dark:bg-slate-900 dark:border-slate-700"
-  >
+    class="p-4 bg-white block sm:flex items-center justify-between border-b border-gray-200 lg:mt-1.5 dark:bg-slate-900 dark:border-slate-700">
     <div class="mb-1 w-full">
       <div class="mb-2 pb-3">
-        <nav
-          class="flex mb-4 pb-4 border-b border-gray-200 dark:border-slate-700"
-          aria-label="Breadcrumb"
-        >
+        <nav class="flex mb-4 pb-4 border-b border-gray-200 dark:border-slate-700" aria-label="Breadcrumb">
           <ol class="inline-flex items-center space-x-1 md:space-x-2">
             <li class="inline-flex items-center">
-              <a
-                href="#"
-                class="text-gray-700 hover:text-gray-900 inline-flex items-center dark:text-slate-300 dark:hover:text-slate-500"
-              >
-                <svg
-                  class="w-5 h-5 mr-2.5"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
+              <a href="#"
+                class="text-gray-700 hover:text-gray-900 inline-flex items-center dark:text-slate-300 dark:hover:text-slate-500">
+                <svg class="w-5 h-5 mr-2.5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                   <path
-                    d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"
-                  ></path>
+                    d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z">
+                  </path>
                 </svg>
                 Painel
               </a>
             </li>
             <li>
               <div class="flex items-center">
-                <svg
-                  class="w-6 h-6 text-gray-400"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    fill-rule="evenodd"
+                <svg class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20"
+                  xmlns="http://www.w3.org/2000/svg">
+                  <path fill-rule="evenodd"
                     d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                    clip-rule="evenodd"
-                  ></path>
+                    clip-rule="evenodd"></path>
                 </svg>
-                <a
-                  href="{{ url_for('main.products') }}"
-                  class="text-gray-700 hover:text-gray-900 ml-1 dark:text-slate-300 dark:hover:text-slate-500"
-                  >Produtos</a
-                >
+                <a href="{{ url_for('main.products') }}"
+                  class="text-gray-700 hover:text-gray-900 ml-1 dark:text-slate-300 dark:hover:text-slate-500">Produtos</a>
               </div>
             </li>
             <li>
               <div class="flex items-center">
-                <svg
-                  class="w-6 h-6 text-gray-400"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    fill-rule="evenodd"
+                <svg class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20"
+                  xmlns="http://www.w3.org/2000/svg">
+                  <path fill-rule="evenodd"
                     d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                    clip-rule="evenodd"
-                  ></path>
+                    clip-rule="evenodd"></path>
                 </svg>
-                <a
-                  href="#"
-                  class="text-gray-700 hover:text-gray-900 ml-1 md:ml-2 text-sm font-medium dark:text-slate-300 dark:hover:text-slate-500"
-                  >{{ product.name }}</a
-                >
+                <a href="#"
+                  class="text-gray-700 hover:text-gray-900 ml-1 md:ml-2 text-sm font-medium dark:text-slate-300 dark:hover:text-slate-500">{{
+                  product.name }}</a>
               </div>
             </li>
           </ol>
@@ -79,75 +51,50 @@ content %}
             Detalhes do Produto
           </h1>
           <div>
-            <button
-              type="button"
-              data-modal-toggle="copy-modal"
+            <button type="button" data-modal-toggle="copy-modal"
               class="copy-button w-28 mx-1 px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-sky-600 hover:bg-sky-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:bg-sky-500 dark:hover:bg-sky-600 transition-all duration-300"
-              content="{{ product.apiK }}"
-            >
+              content="{{ product.apiK }}">
               Chave API
             </button>
-            <button
-              type="button"
-              data-modal-toggle="copy-modal"
+            <button type="button" data-modal-toggle="copy-modal"
               class="copy-button w-29 mx-1 px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-sky-600 hover:bg-sky-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:bg-sky-500 dark:hover:bg-sky-600 transition-all duration-300"
-              content="{{ pubKey }}"
-            >
+              content="{{ pubKey }}">
               Chave Pública (PEM)
             </button>
-            <button
-              type="button"
-              data-modal-toggle="copy-modal"
+            <button type="button" data-modal-toggle="copy-modal"
               class="copy-button w-29 mx-1 px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-sky-600 hover:bg-sky-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:bg-sky-500 dark:hover:bg-sky-600 transition-all duration-300"
-              content="{{ pubKeyXML }}"
-            >
+              content="{{ pubKeyXML }}">
               Chave Pública (XML)
             </button>
           </div>
         </div>
       </div>
 
-      <div
-        class="bg-white border-b border-gray-200 dark:bg-slate-900 dark:border-slate-700"
-      >
+      <div class="bg-white border-b border-gray-200 dark:bg-slate-900 dark:border-slate-700">
         <div class="pb-6">
           <div class="mt-1 w-full">
             <div class="flex">
-              <div
-                style="
+              <div style="
                   min-width: 400px;
                   min-height: 400px;
                   max-width: 400px;
                   max-height: 400px;
-                "
-              >
-                <img
-                  src="{{ product.image }}"
-                  class="rounded-lg"
-                  style="height: 100%"
-                />
+                ">
+                <img src="{{ product.image }}" class="rounded-lg" style="height: 100%" />
               </div>
               <div class="ml-8 max-h-96 w-full">
                 <!-- Product details -->
                 <div>
-                  <h1
-                    class="text-xl font-bold text-gray-900 dark:text-gray-300"
-                  >
+                  <h1 class="text-xl font-bold text-gray-900 dark:text-gray-300">
                     {{ product.name }}
                   </h1>
-                  <h2
-                    class="text-m font-medium text-gray-600 dark:text-slate-400"
-                  >
+                  <h2 class="text-m font-medium text-gray-600 dark:text-slate-400">
                     {{ product.category }}
                   </h2>
-                  <h2
-                    class="mt-6 text-sm font-medium text-gray-900 dark:text-gray-300"
-                  >
+                  <h2 class="mt-6 text-sm font-medium text-gray-900 dark:text-gray-300">
                     Descrição:
                   </h2>
-                  <div
-                    class="mt-2 prose prose-sm text-gray-500 max-h-32 overflow-y-auto dark:text-slate-400"
-                  >
+                  <div class="mt-2 prose prose-sm text-gray-500 max-h-32 overflow-y-auto dark:text-slate-400">
                     <p>{{ product.details }}</p>
                   </div>
                 </div>
@@ -156,67 +103,39 @@ content %}
                 <section aria-labelledby="policies-heading" class="mt-10">
                   <dl class="grid grid-cols-2 gap-6">
                     <div
-                      class="bg-gray-50 border border-gray-200 rounded-lg p-6 text-center dark:bg-slate-700 dark:border-slate-500"
-                    >
+                      class="bg-gray-50 border border-gray-200 rounded-lg p-6 text-center dark:bg-slate-700 dark:border-slate-500">
                       <dt>
                         <!-- Heroicon name: outline/globe -->
-                        <svg
-                          class="mx-auto h-6 w-6 flex-shrink-0 text-gray-400 dark:text-slate-100"
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                          aria-hidden="true"
-                        >
-                          <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                          />
+                        <svg class="mx-auto h-6 w-6 flex-shrink-0 text-gray-400 dark:text-slate-100"
+                          xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                          aria-hidden="true">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
-                        <span
-                          class="mt-4 text-sm font-medium text-gray-900 dark:text-slate-100"
-                        >
+                        <span class="mt-4 text-sm font-medium text-gray-900 dark:text-slate-100">
                           Licenças
                         </span>
                       </dt>
-                      <dd
-                        class="mt-1 text-sm text-gray-500 dark:text-slate-400"
-                      >
+                      <dd class="mt-1 text-sm text-gray-500 dark:text-slate-400">
                         {{licenses|length}}
                       </dd>
                     </div>
 
                     <div
-                      class="bg-gray-50 border border-gray-200 rounded-lg p-6 text-center dark:bg-slate-700 dark:border-slate-500"
-                    >
+                      class="bg-gray-50 border border-gray-200 rounded-lg p-6 text-center dark:bg-slate-700 dark:border-slate-500">
                       <dt>
                         <!-- Heroicon name: outline/currency-dollar -->
-                        <svg
-                          class="mx-auto h-6 w-6 flex-shrink-0 text-gray-400 dark:text-slate-100"
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                          aria-hidden="true"
-                        >
-                          <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                          />
+                        <svg class="mx-auto h-6 w-6 flex-shrink-0 text-gray-400 dark:text-slate-100"
+                          xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                          aria-hidden="true">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
-                        <span
-                          class="mt-4 text-sm font-medium text-gray-900 dark:text-slate-100"
-                        >
+                        <span class="mt-4 text-sm font-medium text-gray-900 dark:text-slate-100">
                           Clientes
                         </span>
                       </dt>
-                      <dd
-                        class="mt-1 text-sm text-gray-500 dark:text-slate-400"
-                      >
+                      <dd class="mt-1 text-sm text-gray-500 dark:text-slate-400">
                         {{clients}}
                       </dd>
                     </div>
@@ -230,16 +149,12 @@ content %}
 
       {% if customers|length > 0 %}
       <div class="flex justify-between items-center">
-        <h1
-          class="mt-5 mb-2 font-semibold text-gray-900 text-2xl dark:text-gray-100"
-        >
+        <h1 class="mt-5 mb-2 font-semibold text-gray-900 text-2xl dark:text-gray-100">
           Licenças do Produto
         </h1>
-        <button
-          type="button"
+        <button type="button"
           class="w-fit px-4 py-2 mt-5 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-sky-600 hover:bg-sky-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:bg-sky-500 dark:hover:bg-sky-600 transition-all duration-300"
-          data-modal-toggle="creation-modal"
-        >
+          data-modal-toggle="creation-modal">
           Criar Licença
         </button>
       </div>
@@ -248,38 +163,21 @@ content %}
       <ul role="list" class="mt-5 divide-y divide-gray-200">
         {% for license in licenses %}
         <li>
-          <a
-            href="{{ url_for('main.licenseDisplay', licenseid = license.id) }}"
-            class="group block bg-gray-50 pr-5 pl-5 dark:bg-slate-700 dark:hover:bg-slate-600 transition-all duration-300"
-          >
+          <a href="{{ url_for('main.licenseDisplay', licenseid = license.id) }}"
+            class="group block bg-gray-50 pr-5 pl-5 dark:bg-slate-700 dark:hover:bg-slate-600 transition-all duration-300">
             <div class="flex items-center py-5 px-4 sm:py-6 sm:px-0">
               <div class="min-w-0 flex-1 flex items-center">
-                <div
-                  class="min-w-0 flex-1 px-4 md:grid md:grid-cols-3 md:gap-4"
-                >
+                <div class="min-w-0 flex-1 px-4 md:grid md:grid-cols-3 md:gap-4">
                   <div>
-                    <p
-                      class="text-sm font-medium text-blue-600 truncate dark:text-sky-500"
-                    >
+                    <p class="text-sm font-medium text-blue-600 truncate dark:text-sky-500">
                       Licença #{{license.id}}
                     </p>
-                    <p
-                      class="mt-2 flex items-center text-sm text-gray-500 dark:text-gray-300"
-                    >
+                    <p class="mt-2 flex items-center text-sm text-gray-500 dark:text-gray-300">
                       <!-- Heroicon name: solid/mail -->
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        class="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                        stroke-width="2"
-                      >
-                        <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"
-                        />
+                      <svg xmlns="http://www.w3.org/2000/svg" class="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400"
+                        fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                          d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />
                       </svg>
                       <span class="truncate">{{license.serialkey}}</span>
                     </p>
@@ -289,9 +187,7 @@ content %}
                       <p class="text-sm text-gray-900 dark:text-gray-400">
                         Cliente: '{{license.name}}'
                       </p>
-                      <p
-                        class="mt-2 flex items-center text-sm text-gray-500 dark:text-gray-300"
-                      >
+                      <p class="mt-2 flex items-center text-sm text-gray-500 dark:text-gray-300">
                         Dispositivos: {{license.devices}}/{{license.maxdevices}}
                       </p>
                     </div>
@@ -300,77 +196,44 @@ content %}
                     <div>
                       <p class="text-sm text-gray-900 dark:text-gray-300">
                         Expira em
-                        <time class="timestamp replace-parent"
-                          >{{license.expirydate}}</time
-                        >
+                        <time class="timestamp replace-parent" data-expirytype="{{license.expirytype or 0}}"
+                          data-expirydays="{{license.expirydays or 0}}">{{license.expirydate}}</time>
                       </p>
                       {% if license.status == 0 %}
                       <p class="mt-2 flex items-center text-sm text-yellow-400">
-                        <svg
-                          class="flex-shrink-0 mr-1.5 h-5 w-5 text-yellow-400"
-                          xmlns="http://www.w3.org/2000/svg"
-                          viewBox="0 0 20 20"
-                          fill="currentColor"
-                          aria-hidden="true"
-                        >
-                          <path
-                            fill-rule="evenodd"
+                        <svg class="flex-shrink-0 mr-1.5 h-5 w-5 text-yellow-400" xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                          <path fill-rule="evenodd"
                             d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                            clip-rule="evenodd"
-                          />
+                            clip-rule="evenodd" />
                         </svg>
                         Aguardando Ativação
                       </p>
                       {% elif license.status == 1 %}
                       <p class="mt-2 flex items-center text-sm text-green-400">
-                        <svg
-                          class="flex-shrink-0 mr-1.5 h-5 w-5 text-green-400"
-                          xmlns="http://www.w3.org/2000/svg"
-                          viewBox="0 0 20 20"
-                          fill="currentColor"
-                          aria-hidden="true"
-                        >
-                          <path
-                            fill-rule="evenodd"
+                        <svg class="flex-shrink-0 mr-1.5 h-5 w-5 text-green-400" xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                          <path fill-rule="evenodd"
                             d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                            clip-rule="evenodd"
-                          />
+                            clip-rule="evenodd" />
                         </svg>
                         Ativa
                       </p>
                       {% elif license.status == 2 %}
                       <p class="mt-2 flex items-center text-sm text-red-400">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          class="flex-shrink-0 mr-1.5 h-5 w-5 text-red-400"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                          stroke-width="2"
-                        >
-                          <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                          />
+                        <svg xmlns="http://www.w3.org/2000/svg" class="flex-shrink-0 mr-1.5 h-5 w-5 text-red-400"
+                          fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                          <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
                         Revogada
                       </p>
                       {% else %}
                       <p class="mt-2 flex items-center text-sm text-red-400">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          class="flex-shrink-0 mr-1.5 h-5 w-5 text-red-400"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                          stroke-width="2"
-                        >
-                          <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                          />
+                        <svg xmlns="http://www.w3.org/2000/svg" class="flex-shrink-0 mr-1.5 h-5 w-5 text-red-400"
+                          fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                          <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
                         Expirada
                       </p>
@@ -384,16 +247,10 @@ content %}
                 <!-- Heroicon name: solid/chevron-right -->
                 <svg
                   class="h-5 w-5 text-gray-400 group-hover:text-gray-700 dark:text-gray-400 dark:group-hover:text-gray-200 transition-all duration-300"
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                  aria-hidden="true"
-                >
-                  <path
-                    fill-rule="evenodd"
+                  xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                  <path fill-rule="evenodd"
                     d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                    clip-rule="evenodd"
-                  />
+                    clip-rule="evenodd" />
                 </svg>
               </div>
             </div>
@@ -403,29 +260,18 @@ content %}
       </ul>
       {% else %}
       <div
-        class="bg-white min-h-full px-4 py-16 sm:px-6 sm:py-24 md:grid md:place-items-center lg:px-8 dark:bg-transparent"
-      >
+        class="bg-white min-h-full px-4 py-16 sm:px-6 sm:py-24 md:grid md:place-items-center lg:px-8 dark:bg-transparent">
         <div class="max-w-max mx-auto">
           <main class="sm:flex">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-20 w-20 text-yellow-700"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              stroke-width="2"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
-              ></path>
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-20 w-20 text-yellow-700" fill="none" viewBox="0 0 24 24"
+              stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round"
+                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z">
+              </path>
             </svg>
             <div class="sm:ml-6">
               <div class="sm:border-l sm:border-gray-200 sm:pl-6">
-                <h1
-                  class="text-4xl font-extrabold text-yellow-700 tracking-tight sm:text-5xl"
-                >
+                <h1 class="text-4xl font-extrabold text-yellow-700 tracking-tight sm:text-5xl">
                   Nenhuma Licença do Produto ...
                 </h1>
                 <p class="mt-1 text-base text-gray-500 dark:text-slate-400">
@@ -439,29 +285,18 @@ content %}
       </div>
       {% endif %} {% else %}
       <div
-        class="bg-white min-h-full px-4 py-16 sm:px-6 sm:py-24 md:grid md:place-items-center lg:px-8 dark:bg-transparent"
-      >
+        class="bg-white min-h-full px-4 py-16 sm:px-6 sm:py-24 md:grid md:place-items-center lg:px-8 dark:bg-transparent">
         <div class="max-w-max mx-auto">
           <main class="sm:flex">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-20 w-20 text-red-700"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              stroke-width="2"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
-              ></path>
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-20 w-20 text-red-700" fill="none" viewBox="0 0 24 24"
+              stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round"
+                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z">
+              </path>
             </svg>
             <div class="sm:ml-6">
               <div class="sm:border-l sm:border-gray-200 sm:pl-6">
-                <h1
-                  class="text-4xl font-extrabold text-red-900 tracking-tight sm:text-5xl dark:text-red-800"
-                >
+                <h1 class="text-4xl font-extrabold text-red-900 tracking-tight sm:text-5xl dark:text-red-800">
                   Criação de licença desabilitada
                 </h1>
                 <p class="mt-1 text-base text-gray-500 dark:text-slate-400">
@@ -469,19 +304,13 @@ content %}
                   para criar uma licença de produto.
                 </p>
               </div>
-              <div
-                class="mt-10 flex space-x-3 sm:border-l sm:border-transparent sm:pl-6"
-              >
-                <a
-                  href="{{ url_for('main.customers') }}"
-                  class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-rose-800 hover:bg-rose-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                >
+              <div class="mt-10 flex space-x-3 sm:border-l sm:border-transparent sm:pl-6">
+                <a href="{{ url_for('main.customers') }}"
+                  class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-rose-800 hover:bg-rose-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                   Ver Clientes
                 </a>
-                <a
-                  href="{{ url_for('main.products') }}"
-                  class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-red-700 bg-red-100 hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                >
+                <a href="{{ url_for('main.products') }}"
+                  class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-red-700 bg-red-100 hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                   Voltar para Produtos
                 </a>
               </div>
@@ -494,38 +323,23 @@ content %}
   </div>
 </main>
 
-<div
-  id="creation-modal"
-  data-modal-placement="center-center"
-  tabindex="-1"
-  class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 w-full md:inset-0 h-modal md:h-full"
->
+<div id="creation-modal" data-modal-placement="center-center" tabindex="-1"
+  class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 w-full md:inset-0 h-modal md:h-full">
   <div class="relative p-4 w-full max-w-2xl h-full md:h-auto">
     <!-- Modal content -->
     <div class="relative bg-white rounded-lg shadow dark:bg-slate-800">
       <!-- Modal header -->
-      <div
-        class="flex justify-between items-center p-5 rounded-t border-b dark:border-slate-600"
-      >
+      <div class="flex justify-between items-center p-5 rounded-t border-b dark:border-slate-600">
         <h3 class="text-xl font-medium text-gray-900 dark:text-gray-100">
           Criar Licença
         </h3>
-        <button
-          type="button"
+        <button type="button"
           class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center"
-          data-modal-toggle="creation-modal"
-        >
-          <svg
-            class="w-5 h-5"
-            fill="currentColor"
-            viewBox="0 0 20 20"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              fill-rule="evenodd"
+          data-modal-toggle="creation-modal">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+            <path fill-rule="evenodd"
               d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-              clip-rule="evenodd"
-            ></path>
+              clip-rule="evenodd"></path>
           </svg>
         </button>
       </div>
@@ -534,117 +348,64 @@ content %}
         <form action="#">
           <div class="grid grid-cols-6 gap-6">
             <div class="col-span-6 sm:col-span-3">
-              <label
-                class="text-sm font-medium text-gray-900 block mb-2 dark:text-gray-100"
-                >Dispositivos Máximos</label
-              >
-              <input
-                type="number"
-                id="keyDeviceMax"
+              <label class="text-sm font-medium text-gray-900 block mb-2 dark:text-gray-100">Dispositivos
+                Máximos</label>
+              <input type="number" id="keyDeviceMax"
                 class="dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
-                placeholder="Limite de vinculação de dispositivos"
-              />
+                placeholder="Limite de vinculação de dispositivos" />
             </div>
             <div class="col-span-6 sm:col-span-3">
-              <label
-                class="text-sm font-medium text-gray-900 block mb-2 dark:text-gray-100"
-                >Tipo de Expiração</label
-              >
-              <select
-                id="expiryType"
+              <label class="text-sm font-medium text-gray-900 block mb-2 dark:text-gray-100">Tipo de Expiração</label>
+              <select id="expiryType"
                 class="dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
-                onchange="toggleExpiryFields()"
-              >
+                onchange="toggleExpiryFields()">
                 <option value="0">Data Fixa</option>
                 <option value="1">Dias a partir da Ativação</option>
               </select>
             </div>
             <div class="col-span-6 sm:col-span-3" id="expiryDateContainer">
-              <label
-                class="text-sm font-medium text-gray-900 block mb-2 dark:text-gray-100"
-                >Data de Expiração</label
-              >
-              <input
-                type="date"
-                id="expiryDate"
-                class="dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
-              />
+              <label class="text-sm font-medium text-gray-900 block mb-2 dark:text-gray-100">Data de Expiração</label>
+              <input type="date" id="expiryDate"
+                class="dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5" />
             </div>
             <div class="col-span-6 sm:col-span-3 hidden" id="expiryDaysContainer">
-              <label
-                class="text-sm font-medium text-gray-900 block mb-2 dark:text-gray-100"
-                >Dias de Validade</label
-              >
-              <input
-                type="number"
-                id="expiryDays"
-                min="1"
+              <label class="text-sm font-medium text-gray-900 block mb-2 dark:text-gray-100">Dias de Validade</label>
+              <input type="number" id="expiryDays" min="1"
                 class="dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
-                placeholder="Ex: 30"
-              />
+                placeholder="Ex: 30" />
             </div>
             <div class="col-span-full">
-              <label
-                class="text-sm font-medium text-gray-900 block mb-2 dark:text-gray-100"
-                >Atribuir um cliente</label
-              >
+              <label class="text-sm font-medium text-gray-900 block mb-2 dark:text-gray-100">Atribuir um cliente</label>
               <div>
                 <div class="mt-1 relative">
-                  <button
-                    id="clientSelector"
-                    type="button"
+                  <button id="clientSelector" type="button"
                     class="dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 relative w-full bg-white border border-gray-300 rounded-md shadow-sm pl-3 pr-10 py-2 text-left cursor-default focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                    aria-haspopup="listbox"
-                    aria-expanded="true"
-                    aria-labelledby="listbox-label"
-                  >
+                    aria-haspopup="listbox" aria-expanded="true" aria-labelledby="listbox-label">
                     <span class="w-full inline-flex truncate">
                       <span id="clientNameS" class="truncate"></span>
-                      <span
-                        id="clientIDS"
-                        class="ml-2 truncate text-gray-500 dark:text-gray-400"
-                      ></span>
+                      <span id="clientIDS" class="ml-2 truncate text-gray-500 dark:text-gray-400"></span>
                     </span>
-                    <span
-                      class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none"
-                    >
-                      <svg
-                        class="h-5 w-5 text-gray-400"
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                        aria-hidden="true"
-                      >
-                        <path
-                          fill-rule="evenodd"
+                    <span class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
+                      <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
+                        fill="currentColor" aria-hidden="true">
+                        <path fill-rule="evenodd"
                           d="M10 3a1 1 0 01.707.293l3 3a1 1 0 01-1.414 1.414L10 5.414 7.707 7.707a1 1 0 01-1.414-1.414l3-3A1 1 0 0110 3zm-3.707 9.293a1 1 0 011.414 0L10 14.586l2.293-2.293a1 1 0 011.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z"
-                          clip-rule="evenodd"
-                        />
+                          clip-rule="evenodd" />
                       </svg>
                     </span>
                   </button>
 
-                  <ul
-                    id="clientList"
+                  <ul id="clientList"
                     class="dark:bg-gray-700 absolute z-10 mt-1 w-full bg-white shadow-lg max-h-60 rounded-md py-1 text-base ring-1 ring-black ring-opacity-5 overflow-auto focus:outline-none sm:text-sm hidden"
-                    tabindex="-1"
-                    role="listbox"
-                    aria-labelledby="listbox-label"
-                    aria-activedescendant="listbox-option-3"
-                  >
+                    tabindex="-1" role="listbox" aria-labelledby="listbox-label"
+                    aria-activedescendant="listbox-option-3">
                     {% for customer in customers %}
                     <li
                       class="selectable text-gray-900 cursor-default select-none relative py-2 pl-3 pr-9 client-list-option hover:bg-gray-100 dark:hover:bg-gray-600"
-                      role="option"
-                    >
+                      role="option">
                       <div class="flex">
-                        <span class="font-normal truncate dark:text-white"
-                          >{{customer.name}}</span
-                        >
-                        <span
-                          class="text-gray-500 ml-2 truncate dark:text-gray-400"
-                          >#{{customer.id}}</span
-                        >
+                        <span class="font-normal truncate dark:text-white">{{customer.name}}</span>
+                        <span class="text-gray-500 ml-2 truncate dark:text-gray-400">#{{customer.id}}</span>
                       </div>
                     </li>
                     {% endfor %}
@@ -657,15 +418,9 @@ content %}
         </form>
       </div>
       <!-- Modal footer -->
-      <div
-        class="flex items-center p-6 space-x-2 rounded-b border-t border-gray-200 dark:border-slate-600"
-      >
-        <button
-          id="submitLicense"
-          data-modal-toggle="creation-modal"
-          type="button"
-          class="text-white bg-green-700 hover:bg-gray-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
-        >
+      <div class="flex items-center p-6 space-x-2 rounded-b border-t border-gray-200 dark:border-slate-600">
+        <button id="submitLicense" data-modal-toggle="creation-modal" type="button"
+          class="text-white bg-green-700 hover:bg-gray-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">
           Criar
         </button>
       </div>
@@ -673,57 +428,30 @@ content %}
   </div>
 </div>
 
-<div
-  id="copy-modal"
-  data-modal-placement="center-center"
-  tabindex="-1"
-  class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 w-full md:inset-0 h-modal md:h-full"
->
+<div id="copy-modal" data-modal-placement="center-center" tabindex="-1"
+  class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 w-full md:inset-0 h-modal md:h-full">
   <div class="relative p-4 w-full max-w-xl h-full md:h-auto">
     <div
-      class="inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all my-8 align-middle max-w-xl w-full p-6 dark:bg-slate-700"
-    >
+      class="inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all my-8 align-middle max-w-xl w-full p-6 dark:bg-slate-700">
       <div>
-        <div
-          class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100"
-        >
+        <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100">
           <!-- Heroicon name: outline/check -->
-          <svg
-            class="h-6 w-6 text-green-600"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            aria-hidden="true"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M5 13l4 4L19 7"
-            />
+          <svg class="h-6 w-6 text-green-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+            stroke="currentColor" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
           </svg>
         </div>
         <div class="mt-3 text-center sm:mt-5">
-          <h3
-            class="text-lg leading-6 font-medium text-gray-900 dark:text-slate-100"
-            id="copy-title"
-          ></h3>
+          <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-slate-100" id="copy-title"></h3>
           <div class="mt-2">
-            <p
-              class="text-sm text-gray-500 break-words dark:text-slate-400"
-              id="copy-contents"
-            ></p>
+            <p class="text-sm text-gray-500 break-words dark:text-slate-400" id="copy-contents"></p>
           </div>
         </div>
       </div>
       <div class="mt-5 sm:mt-6 w-full">
         <div class="w-1/3 mx-auto">
-          <button
-            type="button"
-            data-modal-toggle="copy-modal"
-            class="inline-flex justify-center w-full rounded-md border border-transparent shadow-sm px-4 py-2 bg-indigo-600 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:text-sm"
-          >
+          <button type="button" data-modal-toggle="copy-modal"
+            class="inline-flex justify-center w-full rounded-md border border-transparent shadow-sm px-4 py-2 bg-indigo-600 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:text-sm">
             Ok
           </button>
         </div>
@@ -786,7 +514,7 @@ content %}
     const expiryType = document.getElementById("expiryType").value;
     const dateContainer = document.getElementById("expiryDateContainer");
     const daysContainer = document.getElementById("expiryDaysContainer");
-    
+
     if (expiryType == "1") {
       dateContainer.classList.add("hidden");
       daysContainer.classList.remove("hidden");
