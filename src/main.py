@@ -132,6 +132,18 @@ def hardwareIDRemove(keyid):
     return LicenseHandler.unlinkHardwareDevice(keyid, request.get_json().get('hardwareID'))
 
 
+@main.route('/product/<productid>/bulk-action', methods=['POST'])
+@login_required
+def bulkLicenseAction(productid):
+    return LicenseHandler.bulkAction(productid, request.get_json())
+
+
+@main.route('/product/<productid>/delete-expired', methods=['POST'])
+@login_required
+def deleteExpiredLicenses(productid):
+    return LicenseHandler.deleteExpiredLicenses(productid)
+
+
 ###########################################################################
 # CHANGELOG HANDLING
 ###########################################################################

@@ -148,23 +148,60 @@ content %}
       </div>
 
       {% if customers|length > 0 %}
-      <div class="flex justify-between items-center">
-        <h1 class="mt-5 mb-2 font-semibold text-gray-900 text-2xl dark:text-gray-100">
-          Licenças do Produto
-        </h1>
-        <button type="button"
-          class="w-fit px-4 py-2 mt-5 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-sky-600 hover:bg-sky-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:bg-sky-500 dark:hover:bg-sky-600 transition-all duration-300"
-          data-modal-toggle="creation-modal">
-          Criar Licença
-        </button>
+      <div class="flex justify-between items-center flex-wrap gap-2">
+        <div class="flex items-center gap-4">
+          <h1 class="mt-5 mb-2 font-semibold text-gray-900 text-2xl dark:text-gray-100">
+            Licenças do Produto
+          </h1>
+          <!-- Contador de seleção -->
+          <span id="selectionCount" class="hidden mt-3 text-sm text-gray-600 dark:text-gray-400">
+            <span id="selectedCount">0</span> selecionada(s)
+          </span>
+        </div>
+        <div class="flex gap-2 mt-5 flex-wrap">
+          <!-- Barra de ações em massa (oculta por padrão) -->
+          <div id="bulkActionsBar" class="hidden flex gap-2">
+            <button type="button" id="bulkRevokeBtn"
+              class="px-3 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-amber-600 hover:bg-amber-700 focus:outline-none transition-all duration-300">
+              Revogar
+            </button>
+            <button type="button" id="bulkResetBtn"
+              class="px-3 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none transition-all duration-300">
+              Resetar
+            </button>
+            <button type="button" id="bulkDeleteBtn"
+              class="px-3 py-2 border border-rose-500 rounded-md shadow-sm text-sm font-medium text-rose-600 bg-white hover:bg-rose-500 hover:text-white focus:outline-none transition-all duration-300">
+              Excluir
+            </button>
+            <div class="w-px bg-gray-300 mx-1"></div>
+          </div>
+          <!-- Botão de excluir expiradas -->
+          <button type="button" id="deleteExpiredBtn"
+            class="px-4 py-2 border border-red-300 rounded-md shadow-sm text-sm font-medium text-red-600 bg-white hover:bg-red-500 hover:text-white focus:outline-none transition-all duration-300 dark:bg-red-900 dark:text-red-200 dark:border-red-700 dark:hover:bg-red-600">
+            Excluir Expiradas
+          </button>
+          <!-- Botão de criar licença -->
+          <button type="button"
+            class="w-fit px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-sky-600 hover:bg-sky-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:bg-sky-500 dark:hover:bg-sky-600 transition-all duration-300"
+            data-modal-toggle="creation-modal">
+            Criar Licença
+          </button>
+        </div>
       </div>
 
       {% if licenses|length > 0 %}
       <ul role="list" class="mt-5 divide-y divide-gray-200">
         {% for license in licenses %}
-        <li>
+        <li class="relative">
+          <!-- Checkbox para seleção -->
+          <div class="absolute left-2 top-1/2 -translate-y-1/2 z-10">
+            <input type="checkbox"
+              class="license-checkbox h-4 w-4 text-sky-600 border-gray-300 rounded focus:ring-sky-500 cursor-pointer"
+              data-license-id="{{license.id}}" data-license-status="{{license.status}}"
+              onclick="event.stopPropagation();">
+          </div>
           <a href="{{ url_for('main.licenseDisplay', licenseid = license.id) }}"
-            class="group block bg-gray-50 pr-5 pl-5 dark:bg-slate-700 dark:hover:bg-slate-600 transition-all duration-300">
+            class="group block bg-gray-50 pr-5 pl-10 dark:bg-slate-700 dark:hover:bg-slate-600 transition-all duration-300">
             <div class="flex items-center py-5 px-4 sm:py-6 sm:px-0">
               <div class="min-w-0 flex-1 flex items-center">
                 <div class="min-w-0 flex-1 px-4 md:grid md:grid-cols-3 md:gap-4">
@@ -173,13 +210,25 @@ content %}
                       Licença #{{license.id}}
                     </p>
                     <p class="mt-2 flex items-center text-sm text-gray-500 dark:text-gray-300">
-                      <!-- Heroicon name: solid/mail -->
+                      <!-- Heroicon name: solid/key -->
                       <svg xmlns="http://www.w3.org/2000/svg" class="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400"
                         fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round"
                           d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />
                       </svg>
                       <span class="truncate">{{license.serialkey}}</span>
+                      <!-- Botão de copiar chave -->
+                      <button type="button"
+                        class="copy-key-btn ml-2 p-1 text-gray-400 hover:text-sky-600 transition-colors duration-200"
+                        data-serialkey="{{license.serialkey}}"
+                        onclick="event.preventDefault(); event.stopPropagation(); copySerialKey(this);"
+                        title="Copiar chave">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+                          stroke="currentColor" stroke-width="2">
+                          <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                        </svg>
+                      </button>
                     </p>
                   </div>
                   <div class="hidden md:block">
@@ -597,6 +646,139 @@ content %}
     else
       document.getElementById("copy-title").innerHTML =
         "Chave Pública copiada para a área de transferência";
+  }
+</script>
+
+<script>
+  // ========== Gerenciamento de Seleção de Licenças ==========
+  const licenseCheckboxes = document.querySelectorAll('.license-checkbox');
+  const bulkActionsBar = document.getElementById('bulkActionsBar');
+  const selectionCountSpan = document.getElementById('selectionCount');
+  const selectedCountSpan = document.getElementById('selectedCount');
+  const productId = '{{product.id}}';
+
+  // Adicionar listeners para checkboxes
+  licenseCheckboxes.forEach(checkbox => {
+    checkbox.addEventListener('change', updateSelectionUI);
+  });
+
+  function getSelectedLicenseIds() {
+    const selected = [];
+    licenseCheckboxes.forEach(checkbox => {
+      if (checkbox.checked) {
+        selected.push(parseInt(checkbox.getAttribute('data-license-id')));
+      }
+    });
+    return selected;
+  }
+
+  function updateSelectionUI() {
+    const selectedIds = getSelectedLicenseIds();
+    const count = selectedIds.length;
+
+    selectedCountSpan.textContent = count;
+
+    if (count > 0) {
+      bulkActionsBar.classList.remove('hidden');
+      selectionCountSpan.classList.remove('hidden');
+    } else {
+      bulkActionsBar.classList.add('hidden');
+      selectionCountSpan.classList.add('hidden');
+    }
+  }
+
+  // ========== Ações em Massa ==========
+  document.getElementById('bulkRevokeBtn')?.addEventListener('click', () => executeBulkAction('REVOKE'));
+  document.getElementById('bulkResetBtn')?.addEventListener('click', () => executeBulkAction('RESET'));
+  document.getElementById('bulkDeleteBtn')?.addEventListener('click', () => {
+    if (confirm('Tem certeza que deseja excluir as licenças selecionadas? Esta ação não pode ser desfeita.')) {
+      executeBulkAction('DELETE');
+    }
+  });
+
+  function executeBulkAction(action) {
+    const selectedIds = getSelectedLicenseIds();
+    if (selectedIds.length === 0) {
+      showAlert('Nenhuma licença selecionada.');
+      return;
+    }
+
+    showLoader();
+
+    const httpRequest = new XMLHttpRequest();
+    httpRequest.open('POST', '/product/' + productId + '/bulk-action', true);
+    httpRequest.setRequestHeader('Content-Type', 'application/json');
+    httpRequest.send(JSON.stringify({
+      licenseIDs: selectedIds,
+      action: action
+    }));
+
+    httpRequest.onreadystatechange = function () {
+      if (httpRequest.readyState === 4) {
+        hideLoader();
+        if (httpRequest.status === 200) {
+          const response = JSON.parse(httpRequest.responseText);
+          if (response.code === 'OKAY') {
+            alert(response.message);
+            location.reload();
+          } else {
+            showAlert(response.message);
+          }
+        } else {
+          showAlert('Ocorreu um erro ao executar a ação.');
+        }
+      }
+    };
+  }
+
+  // ========== Excluir Expiradas ==========
+  document.getElementById('deleteExpiredBtn')?.addEventListener('click', function () {
+    if (confirm('Tem certeza que deseja excluir todas as licenças expiradas? Esta ação não pode ser desfeita.')) {
+      showLoader();
+
+      const httpRequest = new XMLHttpRequest();
+      httpRequest.open('POST', '/product/' + productId + '/delete-expired', true);
+      httpRequest.setRequestHeader('Content-Type', 'application/json');
+      httpRequest.send(JSON.stringify({}));
+
+      httpRequest.onreadystatechange = function () {
+        if (httpRequest.readyState === 4) {
+          hideLoader();
+          if (httpRequest.status === 200) {
+            const response = JSON.parse(httpRequest.responseText);
+            if (response.code === 'OKAY') {
+              alert(response.message);
+              location.reload();
+            } else {
+              showAlert(response.message);
+            }
+          } else {
+            showAlert('Ocorreu um erro ao excluir as licenças expiradas.');
+          }
+        }
+      };
+    }
+  });
+
+  // ========== Copiar Chave Serial ==========
+  async function copySerialKey(button) {
+    const serialKey = button.getAttribute('data-serialkey');
+    try {
+      await navigator.clipboard.writeText(serialKey);
+
+      // Feedback visual
+      const originalColor = button.classList.contains('text-gray-400') ? 'text-gray-400' : 'text-sky-600';
+      button.classList.remove('text-gray-400');
+      button.classList.add('text-green-500');
+
+      setTimeout(() => {
+        button.classList.remove('text-green-500');
+        button.classList.add(originalColor);
+      }, 1500);
+    } catch (err) {
+      console.error('Falha ao copiar:', err);
+      showAlert('Falha ao copiar a chave.');
+    }
   }
 </script>
 {% endblock %}

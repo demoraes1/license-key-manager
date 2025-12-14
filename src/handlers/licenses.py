@@ -147,3 +147,93 @@ def getStatus(activeDevices):
     if(activeDevices > 0):
         return 1
     return 0
+
+
+def bulkAction(productID, requestData):
+    """
+        Executa ações em massa nas licenças selecionadas.
+        Ações suportadas: REVOKE, RESET, DELETE
+    """
+    adminAcc = current_user
+    licenseIDs = requestData.get('licenseIDs', [])
+    action = requestData.get('action')
+    
+    if not licenseIDs or len(licenseIDs) == 0:
+        return json.dumps({'code': "ERROR", 'message': "Nenhuma licença selecionada."}), 500
+    
+    if action not in ['REVOKE', 'RESET', 'DELETE']:
+        return json.dumps({'code': "ERROR", 'message': "Ação inválida."}), 500
+    
+    success_count = 0
+    error_count = 0
+    
+    for licenseID in licenseIDs:
+        try:
+            licenseObject = DBAPI.getKeyData(licenseID)
+            if licenseObject is None:
+                error_count += 1
+                continue
+                
+            if action == 'REVOKE':
+                if licenseObject.status != 2 and licenseObject.status != 3:
+                    DBAPI.setKeyState(licenseID, 2)
+                    DBAPI.submitLog(licenseID, adminAcc.id, 'RevokedKey', '$$' +
+                                    str(adminAcc.name) + '$$ revogou licença #' + str(licenseID) + ' (ação em massa)')
+                    success_count += 1
+                else:
+                    error_count += 1
+                    
+            elif action == 'RESET':
+                DBAPI.resetKey(licenseID)
+                DBAPI.submitLog(licenseID, adminAcc.id, 'ResetKey', '$$' +
+                                str(adminAcc.name) + '$$ resetou licença #' + str(licenseID) + ' (ação em massa)')
+                success_count += 1
+                
+            elif action == 'DELETE':
+                DBAPI.deleteKey(licenseID)
+                DBAPI.submitLog(None, adminAcc.id, 'DeletedKey', '$$' + str(adminAcc.name) +
+                                '$$ excluiu licença #' + str(licenseID) + ' (ação em massa)')
+                success_count += 1
+                
+        except Exception:
+            error_count += 1
+    
+    return json.dumps({
+        'code': "OKAY",
+        'success': success_count,
+        'errors': error_count,
+        'message': f"{success_count} licença(s) processada(s) com sucesso. {error_count} erro(s)."
+    })
+
+
+def deleteExpiredLicenses(productID):
+    """
+        Exclui todas as licenças expiradas de um produto.
+    """
+    adminAcc = current_user
+    
+    if (not str(productID).isnumeric()) or DBAPI.getProductByID(productID) is None:
+        return json.dumps({'code': "ERROR", 'message': "O produto indicado é inválido ou não existe."}), 500
+    
+    try:
+        # Buscar todas as licenças do produto
+        licenses = DBAPI.getKeys(productID)
+        deleted_count = 0
+        
+        for license in licenses:
+            # Status 3 = Expirada
+            if license.status == 3:
+                DBAPI.deleteKey(license.id)
+                DBAPI.submitLog(None, adminAcc.id, 'DeletedKey', '$$' + str(adminAcc.name) +
+                                '$$ excluiu licença expirada #' + str(license.id))
+                deleted_count += 1
+        
+        return json.dumps({
+            'code': "OKAY",
+            'deleted': deleted_count,
+            'message': f"{deleted_count} licença(s) expirada(s) excluída(s)."
+        })
+        
+    except Exception as exp:
+        print(exp)
+        return json.dumps({'code': "ERROR", 'message': "Ocorreu um erro ao excluir as licenças expiradas - #ERRO DESCONHECIDO"}), 500
