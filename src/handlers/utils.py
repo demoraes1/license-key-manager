@@ -42,42 +42,42 @@ def validateSequence(sequence):
 
 def validateUsername(username):
     if(len(username) == 0 or ' ' in str(username)):
-        raise Exception("- Invalid username")
+        raise Exception("- Nome de usuário inválido")
 
 
 def validatePassword(password):
     if(len(password) < 10):
-        raise Exception("- Invalid password")
+        raise Exception("- Senha inválida")
 
 
 def validateEmail(email):
     regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
     if(not re.fullmatch(regex, email)):
-        raise Exception("- Invalid Email")
+        raise Exception("- E-mail inválido")
 
 
 def validatePhone(phoneNumber):
     if phoneNumber is None:
-        raise Exception("- Invalid Phone Number")
+        raise Exception("- Número de telefone inválido")
     # Aceita apenas 11 dígitos contínuos (DDD + 9 números)
     phone_str = str(phoneNumber).strip()
     if not phone_str.isnumeric() or len(phone_str) != 11:
-        raise Exception("- Invalid Phone Number (must be 11 digits: DDD + 9 numbers)")
+        raise Exception("- Número de telefone inválido (deve ter 11 dígitos: DDD + 9 números)")
 
 
 def validateName(name):
     if(not str(name).replace(' ', '').isalpha()):
-        raise Exception("- Invalid Name")
+        raise Exception("- Nome inválido")
 
 
 def validateClientID(clientID):
     if((not str(clientID).isnumeric()) or DBAPI.getCustomerByID(clientID) is None):
-        raise Exception("- Invalid Client ID (must exist)")
+        raise Exception("- ID do Cliente inválido (deve existir)")
 
 
 def validateMaxDevices(maxDevices):
     if((not str(maxDevices).isnumeric()) or int(maxDevices) <= 0):
-        raise Exception("- Invalid Max Devices (must be >= 1)")
+        raise Exception("- Número Máximo de Dispositivos inválido (deve ser >= 1)")
 
 
 def validateExpiryDate(expiryDate):
@@ -85,7 +85,7 @@ def validateExpiryDate(expiryDate):
                     ).replace(hour=0, minute=0, second=0, microsecond=0)
     lowerBoundTimestamp = datetime.timestamp(dtLowerBound)
     if((not expiryDate == 0) and expiryDate <= lowerBoundTimestamp):
-        raise Exception("- Invalid Date (must be after " +
+        raise Exception("- Data inválida (deve ser depois de " +
                         dtLowerBound.strftime("%d/%m") + ", inclusive).")
 
 

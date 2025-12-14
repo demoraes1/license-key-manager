@@ -44,28 +44,36 @@ def createLicense(productID, requestData):
     """
     adminAcc = current_user
     if((not str(productID).isnumeric()) or DBAPI.getProductByID(productID) is None):
-        return json.dumps({'code': "ERROR", 'message': "The product you have indicated is invalid or does not exist."}), 500
+        return json.dumps({'code': "ERROR", 'message': "O produto indicado é inválido ou não existe."}), 500
 
     client = requestData.get('idclient')
     maxDevices = requestData.get('maxdevices')
     expiryDate = requestData.get('expirydate')
-    expiryType = requestData.get('expirytype', 0)  # 0 = data fixa, 1 = dias
+    expiryType = int(requestData.get('expirytype', 0))  # 0 = data fixa, 1 = dias
     expiryDays = requestData.get('expirydays', None)
 
     # Validação baseada no tipo de expiração
     if expiryType == 1:
         # Modelo de dias: validar dias e não data
         if expiryDays is None or not str(expiryDays).isnumeric() or int(expiryDays) <= 0:
-            return json.dumps({'code': "ERROR", 'message': "Incorrect input: \n- Invalid Expiry Days (must be >= 1)"}), 500
+            return json.dumps({'code': "ERROR", 'message': "Entrada incorreta: \n- Dias de Validade inválidos (deve ser >= 1)"}), 500
         expiryDays = int(expiryDays)
         expiryDate = 0  # Para modelo de dias, expirydate será calculado na ativação
     else:
         # Modelo de data fixa: validar data normalmente
+        # Garantir que expiryDate seja um número válido ou 0
+        if expiryDate is None:
+            expiryDate = 0
+        else:
+            try:
+                expiryDate = int(float(expiryDate))  # Converte float para int se necessário
+            except (ValueError, TypeError):
+                expiryDate = 0
+        
         validationR = Utils.validateMultiple_License(
             client, maxDevices, expiryDate)
         if not validationR == "":
-            return json.dumps({'code': "ERROR", 'message': "Incorrect input: \n" + str(validationR)}), 500
-        expiryDate = int(expiryDate)
+            return json.dumps({'code': "ERROR", 'message': "Entrada incorreta: \n" + str(validationR)}), 500
 
     try:
         serialKey = generateSerialKey(20)
@@ -75,7 +83,7 @@ def createLicense(productID, requestData):
                         '$$ created license #' + str(keyId) + ' for product #' + str(productID))
     except Exception as exp:
         print(exp)
-        return json.dumps({'code': "ERROR", 'message': "An error has occurred when storing the License in the database - #UNKNOWN ERROR!"}), 500
+        return json.dumps({'code': "ERROR", 'message': "Ocorreu um erro ao armazenar a Licença no banco de dados - #ERRO DESCONHECIDO!"}), 500
 
     return json.dumps({'code': "OKAY"}), 200
 
@@ -85,11 +93,11 @@ def changeLicenseState(requestData):
     licenseID = requestData.get('licenseID')
     action = requestData.get('action')
     if(not str(licenseID).isnumeric() or (action != 'SWITCHSTATE' and action != 'DELETE' and action != 'RESET')):
-        return json.dumps({'code': "ERROR", 'message': "The license and (or) the action request you have indicated is (are) invalid ..."}), 500
+        return json.dumps({'code': "ERROR", 'message': "A licença e/ou a ação solicitada é inválida ..."}), 500
 
     licenseObject = DBAPI.getKeyData(licenseID)
     if(licenseObject is None):
-        return json.dumps({'code': "ERROR", 'message': "The license you have indicated does not exist ..."}), 500
+        return json.dumps({'code': "ERROR", 'message': "A licença indicada não existe ..."}), 500
 
     try:
         if action == 'SWITCHSTATE':
@@ -112,7 +120,7 @@ def changeLicenseState(requestData):
             DBAPI.submitLog(licenseID, adminAcc.id, 'ResetKey', '$$' +
                             str(adminAcc.name) + '$$ reset license #' + str(licenseID))
     except Exception:
-        return json.dumps({'code': "ERROR", 'message': "There was an error handling the state of the license - #UNKNOWN ERROR"}), 500
+        return json.dumps({'code': "ERROR", 'message': "Ocorreu um erro ao gerenciar o estado da licença - #ERRO DESCONHECIDO"}), 500
 
     return json.dumps({'code': "OKAY"})
 
@@ -120,7 +128,7 @@ def changeLicenseState(requestData):
 def unlinkHardwareDevice(licenseID, hardwareID):
     adminAcc = current_user
     if(not str(licenseID).isnumeric()):
-        return json.dumps({'code': "ERROR", 'message': "The license you have entered is invalid ..."}), 500
+        return json.dumps({'code': "ERROR", 'message': "A licença informada é inválida ..."}), 500
 
     try:
         DBAPI.deleteRegistrationOfHWID(licenseID, hardwareID)
@@ -128,7 +136,7 @@ def unlinkHardwareDevice(licenseID, hardwareID):
         DBAPI.submitLog(licenseID, adminAcc.id, 'UnlinkedHWID$$$' + hardwareID, '$$' + str(
             adminAcc.name) + '$$ removed Hardware ' + str(hardwareID) + ' from license #' + str(licenseID))
     except Exception:
-        return json.dumps({'code': "ERROR", 'message': "There was an error managing the state of the license - #UNKNOWN ERROR"}), 500
+        return json.dumps({'code': "ERROR", 'message': "Ocorreu um erro ao gerenciar o estado da licença - #ERRO DESCONHECIDO"}), 500
 
     return json.dumps({'code': "OKAY"})
 

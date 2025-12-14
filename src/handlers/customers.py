@@ -21,14 +21,14 @@ def createCustomer(requestData):
 
     validationR = Utils.validateMultiple_Customer(name, email, phone)
     if not validationR == "":
-        return json.dumps({'code': "ERROR", 'message': "Some of your input fields are incorrect: \n" + str(validationR)}), 500
+        return json.dumps({'code': "ERROR", 'message': "Alguns campos estão incorretos: \n" + str(validationR)}), 500
 
     try:
         DBAPI.createCustomer(name, email, phone, country)
         DBAPI.submitLog(None, adminAcc.id, 'CreatedCustomer', '$$' +
                         str(adminAcc.name) + "$$ has registered the customer '" + str(name) + "'.")
     except Exception:
-        return json.dumps({'code': "ERROR", 'message': 'The database failed to create the customer - #UNKNOWN ERROR'}), 500
+        return json.dumps({'code': "ERROR", 'message': 'O banco de dados falhou ao criar o cliente - #ERRO DESCONHECIDO'}), 500
 
     return json.dumps({'code': "OKAY"})
 
@@ -44,14 +44,14 @@ def editCustomer(customerid, requestData):
 
     validationR = Utils.validateMultiple_Customer(name, email, phone)
     if not validationR == "":
-        return json.dumps({'code': "ERROR", 'message': "Incorrect input: \n" + str(validationR)}), 500
+        return json.dumps({'code': "ERROR", 'message': "Entrada incorreta: \n" + str(validationR)}), 500
 
     try:
         DBAPI.modifyCustomer(customerid, name, email, phone, country)
         DBAPI.submitLog(None, adminAcc.id, 'EditedCustomer', '$$' + str(adminAcc.name) +
                         "$$ has modified the data of customer '" + str(name) + "'.")
     except Exception:
-        return json.dumps({'code': "ERROR", 'message': 'The database failed to edit the customer data - #UNKNOWN ERROR'}), 500
+        return json.dumps({'code': "ERROR", 'message': 'O banco de dados falhou ao editar os dados do cliente - #ERRO DESCONHECIDO'}), 500
 
     return json.dumps({'code': "OKAY"})
 
@@ -60,6 +60,6 @@ def deleteCustomer(customerid):
     try:
         DBAPI.deleteCustomer(customerid)
     except Exception:
-        return json.dumps({'code': "ERROR", 'message': 'The database failed to delete the customer - #UNKNOWN ERROR'}), 500
+        return json.dumps({'code': "ERROR", 'message': 'O banco de dados falhou ao excluir o cliente - #ERRO DESCONHECIDO'}), 500
 
     return json.dumps({'code': "OKAY"})

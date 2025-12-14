@@ -13,11 +13,11 @@ def displayProductList():
 
 def displayProduct(productID):
     if(not str(productID).isnumeric()):
-        return Utils.render404("Product not found", "Sorry, but the product you have entered is invalid ...")
+        return Utils.render404("Produto não encontrado", "Desculpe, mas o produto informado é inválido ...")
 
     productContent = DBAPI.getProductByID(productID)
     if(productContent == None):
-        return Utils.render404("Product not found", "Sorry, but the product you have entered doesn't yet exist ...")
+        return Utils.render404("Produto não encontrado", "Desculpe, mas o produto informado ainda não existe ...")
 
     DBAPI.updateKeyStatesFromProduct(productID)
 
@@ -58,7 +58,7 @@ def editProduct(requestData):
     # ###################################################
 
     if(DBAPI.getProductByID(int(id)) is None):
-        return Utils.render404("Product not found", "Sorry, but the product you have entered doesn't yet exist ...")
+        return Utils.render404("Produto não encontrado", "Desculpe, mas o produto informado ainda não existe ...")
 
     DBAPI.editProduct(int(id), name, category, image, details)
     DBAPI.submitLog(None, adminAcc.id, 'EditedProduct', '$$' +
