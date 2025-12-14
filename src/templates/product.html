@@ -681,6 +681,34 @@ content %}
     if (count > 0) {
       bulkActionsBar.classList.remove('hidden');
       selectionCountSpan.classList.remove('hidden');
+
+      // Verificar se todas as licenças selecionadas estão revogadas (status = 2)
+      let allRevoked = true;
+      let hasRevoked = false;
+      licenseCheckboxes.forEach(checkbox => {
+        if (checkbox.checked) {
+          const status = parseInt(checkbox.getAttribute('data-license-status'));
+          if (status === 2) {
+            hasRevoked = true;
+          } else {
+            allRevoked = false;
+          }
+        }
+      });
+
+      // Atualizar texto e ação do botão Revogar/Reativar
+      const revokeBtn = document.getElementById('bulkRevokeBtn');
+      if (allRevoked && hasRevoked) {
+        revokeBtn.textContent = 'Reativar';
+        revokeBtn.classList.remove('bg-amber-600', 'hover:bg-amber-700');
+        revokeBtn.classList.add('bg-green-600', 'hover:bg-green-700');
+        revokeBtn.setAttribute('data-action', 'REACTIVATE');
+      } else {
+        revokeBtn.textContent = 'Revogar';
+        revokeBtn.classList.remove('bg-green-600', 'hover:bg-green-700');
+        revokeBtn.classList.add('bg-amber-600', 'hover:bg-amber-700');
+        revokeBtn.setAttribute('data-action', 'REVOKE');
+      }
     } else {
       bulkActionsBar.classList.add('hidden');
       selectionCountSpan.classList.add('hidden');
@@ -688,7 +716,10 @@ content %}
   }
 
   // ========== Ações em Massa ==========
-  document.getElementById('bulkRevokeBtn')?.addEventListener('click', () => executeBulkAction('REVOKE'));
+  document.getElementById('bulkRevokeBtn')?.addEventListener('click', () => {
+    const action = document.getElementById('bulkRevokeBtn').getAttribute('data-action') || 'REVOKE';
+    executeBulkAction(action);
+  });
   document.getElementById('bulkResetBtn')?.addEventListener('click', () => executeBulkAction('RESET'));
   document.getElementById('bulkDeleteBtn')?.addEventListener('click', () => {
     if (confirm('Tem certeza que deseja excluir as licenças selecionadas? Esta ação não pode ser desfeita.')) {

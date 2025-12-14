@@ -161,7 +161,7 @@ def bulkAction(productID, requestData):
     if not licenseIDs or len(licenseIDs) == 0:
         return json.dumps({'code': "ERROR", 'message': "Nenhuma licença selecionada."}), 500
     
-    if action not in ['REVOKE', 'RESET', 'DELETE']:
+    if action not in ['REVOKE', 'REACTIVATE', 'RESET', 'DELETE']:
         return json.dumps({'code': "ERROR", 'message': "Ação inválida."}), 500
     
     success_count = 0
@@ -179,6 +179,16 @@ def bulkAction(productID, requestData):
                     DBAPI.setKeyState(licenseID, 2)
                     DBAPI.submitLog(licenseID, adminAcc.id, 'RevokedKey', '$$' +
                                     str(adminAcc.name) + '$$ revogou licença #' + str(licenseID) + ' (ação em massa)')
+                    success_count += 1
+                else:
+                    error_count += 1
+
+            elif action == 'REACTIVATE':
+                if licenseObject.status == 2:  # Apenas reativa se estiver revogada
+                    new_status = 1 if licenseObject.devices > 0 else 0
+                    DBAPI.setKeyState(licenseID, new_status)
+                    DBAPI.submitLog(licenseID, adminAcc.id, 'ReactivatedKey', '$$' +
+                                    str(adminAcc.name) + '$$ reativou licença #' + str(licenseID) + ' (ação em massa)')
                     success_count += 1
                 else:
                     error_count += 1
