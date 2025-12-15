@@ -3,7 +3,7 @@ FROM python:3.10.7-alpine3.16
 RUN apk add bash curl gcc libc-dev libffi-dev 
 RUN apk add sqlite
 
-RUN pip3 install greenlet==1.1.2 gunicorn==20.1.0 gevent==21.12.0 
+RUN pip3 install greenlet==3.0.3 gunicorn==21.2.0 gevent==24.2.1 zope.interface 
 
 # Create a group and user
 RUN addgroup -S appgroup && adduser -S appuser -G appgroup
