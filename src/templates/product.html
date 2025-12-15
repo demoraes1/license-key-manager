@@ -190,7 +190,18 @@ content %}
       </div>
 
       {% if licenses|length > 0 %}
-      <ul role="list" class="mt-5 divide-y divide-gray-200">
+      <!-- Cabeçalho com Selecionar Todas -->
+      <div
+        class="mt-5 flex items-center gap-3 px-2 py-3 bg-gray-100 dark:bg-slate-800 rounded-t-lg border-b border-gray-200 dark:border-slate-600">
+        <input type="checkbox" id="selectAllLicenses"
+          class="h-4 w-4 text-sky-600 border-gray-300 rounded focus:ring-sky-500 cursor-pointer"
+          onclick="toggleSelectAll(this.checked)">
+        <label for="selectAllLicenses"
+          class="text-sm font-medium text-gray-700 dark:text-gray-300 cursor-pointer select-none">
+          Selecionar Todas
+        </label>
+      </div>
+      <ul role="list" class="divide-y divide-gray-200">
         {% for license in licenses %}
         <li class="relative">
           <!-- Checkbox para seleção -->
@@ -423,6 +434,15 @@ content %}
                 class="dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
                 placeholder="Ex: 30" />
             </div>
+            <div class="col-span-6 sm:col-span-3">
+              <label class="text-sm font-medium text-gray-900 block mb-2 dark:text-gray-100">Quantidade de Licenças
+                <span class="text-xs text-gray-500 dark:text-gray-400">(opcional)</span></label>
+              <input type="number" id="licenseQuantity" min="1" max="100" value="1"
+                class="dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
+                placeholder="1" />
+              <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Crie múltiplas licenças idênticas de uma vez
+                (máx: 100)</p>
+            </div>
             <div class="col-span-full">
               <label class="text-sm font-medium text-gray-900 block mb-2 dark:text-gray-100">Atribuir um cliente</label>
               <div>
@@ -580,10 +600,22 @@ content %}
     showLoader();
 
     const expiryType = parseInt(document.getElementById("expiryType").value);
+    const quantityInput = document.getElementById("licenseQuantity");
+    let quantity = parseInt(quantityInput.value) || 1;
+
+    // Validar quantidade
+    if (quantity < 1) quantity = 1;
+    if (quantity > 100) {
+      hideLoader();
+      showAlert("A quantidade máxima de licenças por vez é 100.");
+      return;
+    }
+
     let licenseData = {
       idclient: parseInt(clientIDC.innerText.replace(/^\D+/g, "")),
       maxdevices: parseInt(maxDevicesC.value),
       expirytype: expiryType,
+      quantity: quantity,
     };
 
     if (expiryType == 1) {
@@ -713,6 +745,9 @@ content %}
       bulkActionsBar.classList.add('hidden');
       selectionCountSpan.classList.add('hidden');
     }
+
+    // Atualizar estado do checkbox "Selecionar Todas"
+    updateSelectAllState();
   }
 
   // ========== Ações em Massa ==========
@@ -791,18 +826,68 @@ content %}
     }
   });
 
+  // ========== Selecionar Todas ==========
+  function toggleSelectAll(checked) {
+    const checkboxes = document.querySelectorAll('.license-checkbox');
+    checkboxes.forEach(checkbox => {
+      checkbox.checked = checked;
+    });
+    updateSelectionUI();
+  }
+
+  // Atualizar estado do "Selecionar Todas" quando checkboxes individuais mudam
+  function updateSelectAllState() {
+    const checkboxes = document.querySelectorAll('.license-checkbox');
+    const selectAllCheckbox = document.getElementById('selectAllLicenses');
+    if (!selectAllCheckbox) return;
+
+    const allChecked = Array.from(checkboxes).every(cb => cb.checked);
+    const someChecked = Array.from(checkboxes).some(cb => cb.checked);
+
+    selectAllCheckbox.checked = allChecked;
+    selectAllCheckbox.indeterminate = someChecked && !allChecked;
+  }
+
+  // Adicionar listener para atualizar estado do "Selecionar Todas"
+  document.querySelectorAll('.license-checkbox').forEach(checkbox => {
+    checkbox.addEventListener('change', updateSelectAllState);
+  });
+
   // ========== Copiar Chave Serial ==========
   async function copySerialKey(button) {
     const serialKey = button.getAttribute('data-serialkey');
     try {
       await navigator.clipboard.writeText(serialKey);
 
-      // Feedback visual
+      // Criar tooltip de feedback
+      const tooltip = document.createElement('div');
+      tooltip.className = 'fixed z-50 px-3 py-2 text-sm font-medium text-white bg-green-600 rounded-lg shadow-lg transform -translate-x-1/2 transition-all duration-300';
+      tooltip.textContent = '✓ Copiado!';
+      tooltip.style.opacity = '0';
+      tooltip.style.transform = 'translateY(10px)';
+
+      // Posicionar tooltip próximo ao botão
+      const rect = button.getBoundingClientRect();
+      tooltip.style.left = rect.left + (rect.width / 2) + 'px';
+      tooltip.style.top = (rect.top - 40) + 'px';
+      document.body.appendChild(tooltip);
+
+      // Animar entrada
+      requestAnimationFrame(() => {
+        tooltip.style.opacity = '1';
+        tooltip.style.transform = 'translateY(0)';
+      });
+
+      // Feedback visual no ícone
       const originalColor = button.classList.contains('text-gray-400') ? 'text-gray-400' : 'text-sky-600';
       button.classList.remove('text-gray-400');
       button.classList.add('text-green-500');
 
+      // Remover tooltip e restaurar cor após delay
       setTimeout(() => {
+        tooltip.style.opacity = '0';
+        tooltip.style.transform = 'translateY(-10px)';
+        setTimeout(() => tooltip.remove(), 300);
         button.classList.remove('text-green-500');
         button.classList.add(originalColor);
       }, 1500);

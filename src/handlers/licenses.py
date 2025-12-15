@@ -39,8 +39,10 @@ def displayLicense(licenseID):
 
 def createLicense(productID, requestData):
     """
-        Creates a license for the indicated productID and validates the data sent by the request (JSON format).
-        The return comes in a JSON format, made out of a 'code' field and a 'message' field. The function will always return an error as a 'code' if the productID is invalid or does not exist, if the request data is also invalid or if an error occurs while handling the Database. 
+        Creates a license (or multiple licenses) for the indicated productID and validates the data sent by the request (JSON format).
+        The return comes in a JSON format, made out of a 'code' field and a 'message' field. The function will always return an error as a 'code' if the productID is invalid or does not exist, if the request data is also invalid or if an error occurs while handling the Database.
+        
+        If 'quantity' is provided and greater than 1, multiple identical licenses will be created.
     """
     adminAcc = current_user
     if((not str(productID).isnumeric()) or DBAPI.getProductByID(productID) is None):
@@ -51,6 +53,31 @@ def createLicense(productID, requestData):
     expiryDate = requestData.get('expirydate')
     expiryType = int(requestData.get('expirytype', 0))  # 0 = data fixa, 1 = dias
     expiryDays = requestData.get('expirydays', None)
+    
+    # Quantidade de licenças a criar (padrão: 1)
+    quantity = requestData.get('quantity', 1)
+    try:
+        quantity = int(quantity)
+        if quantity < 1:
+            quantity = 1
+        if quantity > 100:
+            return json.dumps({'code': "ERROR", 'message': "A quantidade máxima de licenças por vez é 100."}), 500
+    except (ValueError, TypeError):
+        quantity = 1
+
+    # Validar client e maxDevices primeiro (comum a ambos os tipos)
+    if client is None or not str(client).isnumeric():
+        return json.dumps({'code': "ERROR", 'message': "Entrada incorreta: \n- ID do Cliente inválido"}), 500
+    
+    if maxDevices is None:
+        return json.dumps({'code': "ERROR", 'message': "Entrada incorreta: \n- Número Máximo de Dispositivos é obrigatório"}), 500
+    
+    try:
+        maxDevices = int(maxDevices)
+        if maxDevices <= 0:
+            return json.dumps({'code': "ERROR", 'message': "Entrada incorreta: \n- Número Máximo de Dispositivos deve ser >= 1"}), 500
+    except (ValueError, TypeError):
+        return json.dumps({'code': "ERROR", 'message': "Entrada incorreta: \n- Número Máximo de Dispositivos inválido"}), 500
 
     # Validação baseada no tipo de expiração
     if expiryType == 1:
@@ -70,19 +97,29 @@ def createLicense(productID, requestData):
             except (ValueError, TypeError):
                 expiryDate = 0
         
-        validationR = Utils.validateMultiple_License(
-            client, maxDevices, expiryDate)
-        if not validationR == "":
-            return json.dumps({'code': "ERROR", 'message': "Entrada incorreta: \n" + str(validationR)}), 500
+        # Validar data de expiração (se não for perpétua)
+        if expiryDate != 0:
+            from datetime import datetime
+            dtLowerBound = (datetime.fromtimestamp(int(time()) + 86400)
+                            ).replace(hour=0, minute=0, second=0, microsecond=0)
+            lowerBoundTimestamp = datetime.timestamp(dtLowerBound)
+            if expiryDate <= lowerBoundTimestamp:
+                return json.dumps({'code': "ERROR", 'message': "Entrada incorreta: \n- Data inválida (deve ser depois de " +
+                                dtLowerBound.strftime("%d/%m") + ", inclusive)."}), 500
 
     try:
-        serialKey = generateSerialKey(20)
-        keyId = DBAPI.createKey(productID, int(
-            client), serialKey, int(maxDevices), expiryDate, int(expiryType), expiryDays)
-        DBAPI.submitLog(keyId, adminAcc.id, 'CreatedKey', '$$' + str(adminAcc.name) +
-                        '$$ created license #' + str(keyId) + ' for product #' + str(productID))
+        createdIds = []
+        for _ in range(quantity):
+            serialKey = generateSerialKey(20)
+            keyId = DBAPI.createKey(productID, int(
+                client), serialKey, int(maxDevices), expiryDate, int(expiryType), expiryDays)
+            createdIds.append(keyId)
+            DBAPI.submitLog(keyId, adminAcc.id, 'CreatedKey', '$$' + str(adminAcc.name) +
+                            '$$ created license #' + str(keyId) + ' for product #' + str(productID))
     except Exception as exp:
         print(exp)
+        if createdIds:
+            return json.dumps({'code': "ERROR", 'message': f"Ocorreu um erro ao armazenar a Licença no banco de dados. {len(createdIds)} licença(s) foram criadas antes do erro."}), 500
         return json.dumps({'code': "ERROR", 'message': "Ocorreu um erro ao armazenar a Licença no banco de dados - #ERRO DESCONHECIDO!"}), 500
 
     return json.dumps({'code': "OKAY"}), 200
