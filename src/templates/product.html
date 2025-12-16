@@ -189,6 +189,72 @@ content %}
         </div>
       </div>
 
+      <!-- Seção de Filtros -->
+      {% if licenses|length > 0 %}
+      <div class="mt-4 p-4 bg-gray-50 dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700">
+        <div class="flex items-center justify-between mb-3">
+          <h3 class="text-sm font-semibold text-gray-700 dark:text-gray-300">
+            <svg xmlns="http://www.w3.org/2000/svg" class="inline h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24"
+              stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+            </svg>
+            Filtros
+          </h3>
+          <button type="button" onclick="clearAllFilters()"
+            class="text-xs text-sky-600 hover:text-sky-800 dark:text-sky-400 dark:hover:text-sky-300">
+            Limpar filtros
+          </button>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <!-- Filtro por Status -->
+          <div>
+            <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Status</label>
+            <select id="filterStatus" onchange="applyFilters()"
+              class="w-full text-sm rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-sky-500 focus:ring-sky-500">
+              <option value="all">Todos</option>
+              <option value="0">Aguardando Ativação</option>
+              <option value="1">Ativas</option>
+              <option value="2">Revogadas</option>
+              <option value="3">Expiradas</option>
+            </select>
+          </div>
+
+          <!-- Filtro por Serial Key -->
+          <div>
+            <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Serial Key</label>
+            <input type="text" id="filterSerialKey" placeholder="Buscar por serial..." oninput="applyFilters()"
+              class="w-full text-sm rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 shadow-sm focus:border-sky-500 focus:ring-sky-500">
+          </div>
+
+          <!-- Filtro por Tipo de Expiração -->
+          <div>
+            <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Tipo de Expiração</label>
+            <select id="filterExpiryType" onchange="applyFilters()"
+              class="w-full text-sm rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-sky-500 focus:ring-sky-500">
+              <option value="all">Todos</option>
+              <option value="0">Data Fixa</option>
+              <option value="1">Dias após Ativação</option>
+              <option value="perpetual">Perpétua</option>
+            </select>
+          </div>
+
+          <!-- Filtro por ID de Máquina (HWID) -->
+          <div>
+            <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">ID da Máquina
+              (HWID)</label>
+            <input type="text" id="filterHWID" placeholder="Buscar por HWID..." oninput="applyFilters()"
+              class="w-full text-sm rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 shadow-sm focus:border-sky-500 focus:ring-sky-500">
+          </div>
+        </div>
+
+        <!-- Contador de resultados -->
+        <div class="mt-3 text-xs text-gray-500 dark:text-gray-400">
+          <span id="filterResultCount">{{licenses|length}}</span> licença(s) encontrada(s)
+        </div>
+      </div>
+      {% endif %}
       {% if licenses|length > 0 %}
       <!-- Cabeçalho com Selecionar Todas -->
       <div
@@ -203,7 +269,10 @@ content %}
       </div>
       <ul role="list" class="divide-y divide-gray-200">
         {% for license in licenses %}
-        <li class="relative">
+        <li class="relative license-item" data-status="{{license.status}}" data-serialkey="{{license.serialkey}}"
+          data-expirytype="{{license.expirytype or 0}}" data-expirydate="{{license.expirydate}}"
+          data-expirydays="{{license.expirydays or 0}}"
+          data-hwids="{% for reg in license.registrations %}{{reg.hardwareID}}{% if not loop.last %},{% endif %}{% endfor %}">
           <!-- Checkbox para seleção -->
           <div class="absolute left-2 top-1/2 -translate-y-1/2 z-10">
             <input type="checkbox"
@@ -896,5 +965,97 @@ content %}
       showAlert('Falha ao copiar a chave.');
     }
   }
+
+  // ========== Sistema de Filtros ==========
+  function applyFilters() {
+    const statusFilter = document.getElementById('filterStatus')?.value || 'all';
+    const serialKeyFilter = document.getElementById('filterSerialKey')?.value.toLowerCase().trim() || '';
+    const expiryTypeFilter = document.getElementById('filterExpiryType')?.value || 'all';
+    const hwidFilter = document.getElementById('filterHWID')?.value.toLowerCase().trim() || '';
+
+    const licenseItems = document.querySelectorAll('.license-item');
+    let visibleCount = 0;
+
+    licenseItems.forEach(item => {
+      const status = item.getAttribute('data-status');
+      const serialKey = (item.getAttribute('data-serialkey') || '').toLowerCase();
+      const expiryType = item.getAttribute('data-expirytype') || '0';
+      const expiryDate = parseInt(item.getAttribute('data-expirydate') || '0');
+      const hwids = (item.getAttribute('data-hwids') || '').toLowerCase();
+
+      let visible = true;
+
+      // Filtro por Status
+      if (statusFilter !== 'all' && status !== statusFilter) {
+        visible = false;
+      }
+
+      // Filtro por Serial Key
+      if (visible && serialKeyFilter && !serialKey.includes(serialKeyFilter)) {
+        visible = false;
+      }
+
+      // Filtro por Tipo de Expiração
+      if (visible && expiryTypeFilter !== 'all') {
+        if (expiryTypeFilter === 'perpetual') {
+          // Perpétua: expiryType = 0 e expiryDate = 0
+          if (!(expiryType === '0' && expiryDate === 0)) {
+            visible = false;
+          }
+        } else if (expiryTypeFilter === '0') {
+          // Data fixa: expiryType = 0 e expiryDate > 0
+          if (!(expiryType === '0' && expiryDate > 0)) {
+            visible = false;
+          }
+        } else if (expiryTypeFilter === '1') {
+          // Dias após ativação
+          if (expiryType !== '1') {
+            visible = false;
+          }
+        }
+      }
+
+      // Filtro por HWID
+      if (visible && hwidFilter && !hwids.includes(hwidFilter)) {
+        visible = false;
+      }
+
+      // Aplicar visibilidade
+      if (visible) {
+        item.style.display = '';
+        visibleCount++;
+      } else {
+        item.style.display = 'none';
+      }
+    });
+
+    // Atualizar contador
+    const countElement = document.getElementById('filterResultCount');
+    if (countElement) {
+      countElement.textContent = visibleCount;
+    }
+
+    // Atualizar estado do "Selecionar Todas" para considerar apenas itens visíveis
+    updateSelectAllState();
+  }
+
+  function clearAllFilters() {
+    const statusFilter = document.getElementById('filterStatus');
+    const serialKeyFilter = document.getElementById('filterSerialKey');
+    const expiryTypeFilter = document.getElementById('filterExpiryType');
+    const hwidFilter = document.getElementById('filterHWID');
+
+    if (statusFilter) statusFilter.value = 'all';
+    if (serialKeyFilter) serialKeyFilter.value = '';
+    if (expiryTypeFilter) expiryTypeFilter.value = 'all';
+    if (hwidFilter) hwidFilter.value = '';
+
+    applyFilters();
+  }
+
+  // Aplicar filtros iniciais (mostrar todos)
+  document.addEventListener('DOMContentLoaded', function () {
+    applyFilters();
+  });
 </script>
 {% endblock %}
