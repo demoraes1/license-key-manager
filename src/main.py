@@ -175,6 +175,57 @@ def getvalidationlogs():
 
 
 ###########################################################################
+# LICENSE VALIDATION
+###########################################################################
+@main.route('/api/validate', methods=['POST'])
+@main.route('/validate', methods=['POST'])
+@main.route('/api/v1/validate', methods=['POST'])
+def validate_license():
+    try:
+        data = request.get_json(force=True, silent=True)
+        if data is None:
+            # Fallback para tentar ler de form-data se JSON falhar
+            if request.form:
+                data = request.form.to_dict()
+            
+        if data is None:
+            from flask import jsonify
+            print("DEBUG: Nenhum dado recebido ou JSON inválido.", flush=True)
+            return jsonify({
+                'HttpCode': '400',
+                'Code': 'ERR_INVALID_JSON',
+                'Message': 'ERRO :: O corpo da requisição deve ser um JSON válido.'
+            }), 400
+        
+        print(f"DEBUG: Dados recebidos p/ validação: {data}", flush=True)
+        apiKey = data.get('apiKey')
+        print(f"DEBUG: Buscando produto com API Key: '{apiKey}'", flush=True)
+        
+        product = DBAPI.getProductThroughAPI(apiKey)
+        if product:
+            print(f"DEBUG: Produto encontrado: {product.name} (ID: {product.id})", flush=True)
+        else:
+            print(f"DEBUG: Produto NÃO encontrado para a chave fornecida.", flush=True)
+            # Listar todas as chaves do banco para comparação (Debug extremo)
+            all_products = DBAPI.getProduct('_ALL_')
+            print("DEBUG: Chaves disponíveis no banco:", flush=True)
+            for p in all_products:
+                print(f" - ID: {p.id} | Nome: {p.name} | Key: '{p.apiK}'", flush=True)
+
+        # O handler retorna uma string JSON, então precisamos criar uma Response com o mimetype correto
+        response_content = ValidationHandler.handleValidation(data)
+        return Response(response_content, mimetype='application/json')
+    except Exception as e:
+        print(f"DEBUG: Exception in validate_license: {e}", flush=True)
+        from flask import jsonify
+        return jsonify({
+            'HttpCode': '500',
+            'Code': 'ERR_INTERNAL',
+            'Message': f'ERRO INTERNO :: {str(e)}'
+        }), 500
+
+
+###########################################################################
 # ADMINISTRATOR ACCOUNTS - HANDLING
 ###########################################################################
 @main.route('/admins')
