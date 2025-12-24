@@ -703,7 +703,7 @@ BODY:
 
 ### Sync
 
-Allows external applications to securely synchronize JSON data to the server. The data is saved and can be managed through the Dashboard.<br/><br/>
+Allows external applications to securely synchronize JSON data to the server. For multi-device licenses, data is automatically organized by HardwareID, ensuring that each device's synchronization history is kept separate.<br/><br/>
 **Path** : `/api/v1/sync`\
 **Method** : `POST`\
 **Authentication required** : NO\

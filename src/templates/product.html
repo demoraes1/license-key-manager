@@ -712,19 +712,24 @@ content %}
     httpRequest.send(JSON.stringify(licenseData));
     httpRequest.onreadystatechange = function () {
       if (httpRequest.readyState === 4) {
-        if (httpRequest.status === 200) {
-          let response = JSON.parse(httpRequest.responseText);
-          if (response["code"] == "OKAY") location.reload();
-          else {
+        if (httpRequest.status === 200 || httpRequest.status === 400 || httpRequest.status === 500) {
+          try {
+            let response = JSON.parse(httpRequest.responseText);
+            if (response["code"] == "OKAY") {
+              location.reload();
+            } else {
+              hideLoader();
+              showAlert(response["message"] || "Ocorreu um erro desconhecido.");
+            }
+          } catch (e) {
+            console.error("Erro ao processar JSON:", e);
             hideLoader();
-            showAlert(response["message"]);
+            showAlert("O servidor retornou uma resposta inválida.");
           }
         } else {
-          console.error(
-            "A requisição falhou ao ser executada. Sua entrada provavelmente é inválida ou você modificou o conteúdo. Se você acha que isso é um bug, por favor reporte."
-          );
+          console.error("A requisição falhou com status:", httpRequest.status);
           hideLoader();
-          showAlert("O servidor falhou ao aceitar sua entrada.");
+          showAlert("O servidor falhou ao processar sua solicitação.");
         }
       }
     };

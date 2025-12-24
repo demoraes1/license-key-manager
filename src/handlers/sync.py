@@ -8,6 +8,13 @@ from ..keys import decrypt_data
 SYNC_DIR = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'database', 'sync')
 
 def handleSync(requestData):
+    if requestData is None:
+        return jsonify({
+            'HttpCode': '400',
+            'Code': 'ERR_NO_DATA',
+            'Message': 'ERRO :: Nenhum dado fornecido.'
+        }), 400
+
     # 1. Validar apiKey
     product = DBAPI.getProductThroughAPI(requestData.get('apiKey'))
     if not product:

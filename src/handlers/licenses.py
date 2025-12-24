@@ -99,13 +99,12 @@ def createLicense(productID, requestData):
         
         # Validar data de expiração (se não for perpétua)
         if expiryDate != 0:
-            from datetime import datetime
-            dtLowerBound = (datetime.fromtimestamp(int(time()) + 86400)
-                            ).replace(hour=0, minute=0, second=0, microsecond=0)
-            lowerBoundTimestamp = datetime.timestamp(dtLowerBound)
-            if expiryDate <= lowerBoundTimestamp:
-                return json.dumps({'code': "ERROR", 'message': "Entrada incorreta: \n- Data inválida (deve ser depois de " +
-                                dtLowerBound.strftime("%d/%m") + ", inclusive)."}), 500
+            # Ajustar para o final do dia (23:59:59) se a data vier como 00:00:00 (comum em seletores de data)
+            # 86399 segundos = 23h 59m 59s
+            expiryDate = int(expiryDate) + 86399
+            
+            if expiryDate <= int(time()):
+                return json.dumps({'code': "ERROR", 'message': "Entrada incorreta: \n- A data de expiração deve ser no futuro."}), 400
 
     try:
         createdIds = []

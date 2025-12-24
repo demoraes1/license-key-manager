@@ -207,7 +207,15 @@ def adminToggleStatus(userid):
 ###########################################################################
 @main.route('/api/v1/sync', methods=['POST'])
 def sync_data():
-    return SyncHandler.handleSync(request.get_json())
+    data = request.get_json(force=True, silent=True)
+    if data is None:
+        from flask import jsonify
+        return jsonify({
+            'HttpCode': '400',
+            'Code': 'ERR_INVALID_JSON',
+            'Message': 'ERRO :: O corpo da requisição deve ser um JSON válido.'
+        }), 400
+    return SyncHandler.handleSync(data)
 
 
 @main.route('/sync-files')
