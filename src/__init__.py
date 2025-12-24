@@ -24,11 +24,10 @@ def create_app(testing=None, database=None):
     app.config['SECRET_KEY'] = os.getenv(
         "SECRET_KEY") or 'secret-key-goes-here'
     if(testing is None or testing is False):
-        # Garantir URI absoluta com 4 barras no Linux/Unix
-        abs_db_path = os.path.abspath(database).replace("\\", "/")
-        if not abs_db_path.startswith("/"):
-            abs_db_path = "/" + abs_db_path
-        app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////' + abs_db_path
+        # Garantir URI absoluta compatível com SQLAlchemy (3 barras + caminho absoluto)
+        # O SQLAlchemy trata corretamente caminhos com letras de drive no Windows
+        abs_db_path = os.path.abspath(database)
+        app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + abs_db_path
     else:
         # in-memory db for testing
         app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///:memory:'
