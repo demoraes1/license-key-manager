@@ -222,13 +222,13 @@ def sync_details(productid, licenseid):
     return SyncHandler.listLicenseFiles(productid, licenseid)
 
 
-@main.route('/sync-files/download/<productid>/<licenseid>/<filename>')
+@main.route('/sync-files/download/<productid>/<licenseid>/<hardwareid>/<filename>')
 @login_required
-def sync_download(productid, licenseid, filename):
-    return SyncHandler.downloadFile(productid, licenseid, filename)
+def sync_download(productid, licenseid, hardwareid, filename):
+    return SyncHandler.downloadFile(productid, licenseid, hardwareid, filename)
 
 
-@main.route('/sync-files/delete/<productid>/<licenseid>/<filename>', methods=['POST'])
+@main.route('/sync-files/delete/<productid>/<licenseid>/<hardwareid>/<filename>', methods=['POST'])
 @login_required
-def sync_delete(productid, licenseid, filename):
-    return SyncHandler.deleteFile(productid, licenseid, filename)
+def sync_delete(productid, licenseid, hardwareid, filename):
+    return SyncHandler.deleteFile(productid, licenseid, hardwareid, filename)

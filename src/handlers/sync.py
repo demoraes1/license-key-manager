@@ -55,8 +55,8 @@ def handleSync(requestData):
             'Message': 'ERRO :: Nenhum dado JSON fornecido.'
         }), 400
 
-    # 5. Salvar arquivo
-    dest_path = os.path.join(SYNC_DIR, str(product.id), str(keyObject.id))
+    # 5. Salvar arquivo (agora incluindo hardwareID)
+    dest_path = os.path.join(SYNC_DIR, str(product.id), str(keyObject.id), str(hardwareID))
     os.makedirs(dest_path, exist_ok=True)
     
     filename = f"{int(time.time())}.json"
@@ -84,32 +84,42 @@ def displaySyncFiles():
                 for license_id in os.listdir(prod_path):
                     lic_path = os.path.join(prod_path, license_id)
                     if os.path.isdir(lic_path):
-                        files = [f for f in os.listdir(lic_path) if f.endswith('.json')]
-                        if files:
+                        # Contar arquivos em todos os subdiretórios de hardwareID
+                        total_files = 0
+                        for hardware_id in os.listdir(lic_path):
+                            hw_path = os.path.join(lic_path, hardware_id)
+                            if os.path.isdir(hw_path):
+                                total_files += len([f for f in os.listdir(hw_path) if f.endswith('.json')])
+                        
+                        if total_files > 0:
                             sync_data.append({
                                 'product_id': product_id,
                                 'product_name': product_name,
                                 'license_id': license_id,
-                                'file_count': len(files)
+                                'file_count': total_files
                             })
     
     return render_template('sync_files.html', sync_data=sync_data, mode=request.cookies.get('mode'))
 
 def listLicenseFiles(productid, licenseid):
-    """Lista arquivos de uma licença específica"""
+    """Lista arquivos de uma licença específica, agrupados por dispositivo"""
     lic_path = os.path.join(SYNC_DIR, str(productid), str(licenseid))
     if not os.path.exists(lic_path):
         abort(404)
     
     files = []
-    for f in os.listdir(lic_path):
-        if f.endswith('.json'):
-            file_path = os.path.join(lic_path, f)
-            files.append({
-                'name': f,
-                'timestamp': f.split('.')[0],
-                'size': os.path.getsize(file_path)
-            })
+    for hardware_id in os.listdir(lic_path):
+        hw_path = os.path.join(lic_path, hardware_id)
+        if os.path.isdir(hw_path):
+            for f in os.listdir(hw_path):
+                if f.endswith('.json'):
+                    file_path = os.path.join(hw_path, f)
+                    files.append({
+                        'name': f,
+                        'hardware_id': hardware_id,
+                        'timestamp': f.split('.')[0],
+                        'size': os.path.getsize(file_path)
+                    })
     
     # Ordenar por timestamp decrescente
     files.sort(key=lambda x: x['timestamp'], reverse=True)
@@ -123,12 +133,12 @@ def listLicenseFiles(productid, licenseid):
                           key=key_data, 
                           mode=request.cookies.get('mode'))
 
-def downloadFile(productid, licenseid, filename):
-    directory = os.path.join(SYNC_DIR, str(productid), str(licenseid))
+def downloadFile(productid, licenseid, hardwareid, filename):
+    directory = os.path.join(SYNC_DIR, str(productid), str(licenseid), str(hardwareid))
     return send_from_directory(directory, filename, as_attachment=True)
 
-def deleteFile(productid, licenseid, filename):
-    file_path = os.path.join(SYNC_DIR, str(productid), str(licenseid), filename)
+def deleteFile(productid, licenseid, hardwareid, filename):
+    file_path = os.path.join(SYNC_DIR, str(productid), str(licenseid), str(hardwareid), filename)
     if os.path.exists(file_path):
         os.remove(file_path)
         return jsonify({'Code': 'SUCCESS', 'Message': 'Arquivo excluído com sucesso.'})

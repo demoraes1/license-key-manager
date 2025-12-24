@@ -32,6 +32,9 @@
                                     Data de Recebimento</th>
                                 <th scope="col"
                                     class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-white">
+                                    Dispositivo</th>
+                                <th scope="col"
+                                    class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-white">
                                     Tamanho</th>
                                 <th scope="col"
                                     class="relative py-3.5 pl-3 pr-4 sm:pr-6 whitespace-nowrap text-right text-sm font-medium">
@@ -46,21 +49,24 @@
                                 <td
                                     class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 dark:text-white sm:pl-6 timestamp">
                                     {{ file.timestamp }}</td>
+                                <td
+                                    class="whitespace-nowrap px-3 py-4 text-sm text-gray-500 dark:text-gray-400 font-mono">
+                                    {{ file.hardware_id }}</td>
                                 <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500 dark:text-gray-400">{{
                                     (file.size / 1024) | round(2) }} KB</td>
                                 <td
                                     class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6 space-x-4">
-                                    <a href="{{ url_for('main.sync_download', productid=product.id, licenseid=key.id, filename=file.name) }}"
+                                    <a href="{{ url_for('main.sync_download', productid=product.id, licenseid=key.id, hardwareid=file.hardware_id, filename=file.name) }}"
                                         class="text-blue-600 hover:text-blue-900 dark:text-blue-400">Baixar</a>
                                     <button
-                                        onclick="deleteFileSync('{{ product.id }}', '{{ key.id }}', '{{ file.name }}', 'row-{{ loop.index }}')"
+                                        onclick="deleteFileSync('{{ product.id }}', '{{ key.id }}', '{{ file.hardware_id }}', '{{ file.name }}', 'row-{{ loop.index }}')"
                                         class="text-red-600 hover:text-red-900 dark:text-red-400">Excluir</button>
                                 </td>
                             </tr>
                             {% endfor %}
                             {% else %}
                             <tr>
-                                <td colspan="3" class="py-10 text-center text-sm text-gray-500 dark:text-gray-400">
+                                <td colspan="4" class="py-10 text-center text-sm text-gray-500 dark:text-gray-400">
                                     Nenhum arquivo encontrado.</td>
                             </tr>
                             {% endif %}
@@ -79,11 +85,11 @@
         convertAllTimestamps();
     };
 
-    function deleteFileSync(productId, licenseId, filename, rowId) {
+    function deleteFileSync(productId, licenseId, hardwareId, filename, rowId) {
         if (!confirm("Tem certeza que deseja excluir este arquivo?")) return;
 
         showLoader();
-        fetch(`/sync-files/delete/${productId}/${licenseId}/${filename}`, {
+        fetch(`/sync-files/delete/${productId}/${licenseId}/${hardwareId}/${filename}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
