@@ -15,8 +15,8 @@ COPY requirements.txt requirements.txt
 RUN pip3 install --no-cache-dir -r requirements.txt
 
 
-COPY ./src /license-manager/src
-COPY .env /license-manager/src
+COPY . /license-manager
+RUN chown -R appuser:appgroup /license-manager
 
 RUN mkdir -p /license-manager/src/database && \
     chown -R appuser:appgroup /license-manager/src/database

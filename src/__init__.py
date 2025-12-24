@@ -10,7 +10,12 @@ db = SQLAlchemy()
 _KEY_LENGTH_ = 64
 
 
-def create_app(testing=None, database="database/sqlite.db"):
+def create_app(testing=None, database=None):
+    # Definir caminho padrão absoluto se não fornecido
+    if database is None:
+        # Pega o diretório pai de 'src' (raiz do projeto)
+        basedir = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
+        database = os.path.join(basedir, 'src', 'database', 'sqlite.db')
 
     load_dotenv()
 
@@ -19,7 +24,11 @@ def create_app(testing=None, database="database/sqlite.db"):
     app.config['SECRET_KEY'] = os.getenv(
         "SECRET_KEY") or 'secret-key-goes-here'
     if(testing is None or testing is False):
-        app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + database
+        # Garantir URI absoluta com 4 barras no Linux/Unix
+        abs_db_path = os.path.abspath(database).replace("\\", "/")
+        if not abs_db_path.startswith("/"):
+            abs_db_path = "/" + abs_db_path
+        app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////' + abs_db_path
     else:
         # in-memory db for testing
         app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///:memory:'
