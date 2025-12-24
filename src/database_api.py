@@ -147,11 +147,22 @@ def resetProductCheck(productid):
 def getKeys(productID):
     """
         The following function queries the database for all keys belonging to a product. The product
-        is identified by an ID.
+        is identified by an ID. Returns Key objects with client name joined, and registrations accessible.
     """
-    return db.engine.execute("""
-    SELECT * FROM key JOIN (select id as cid, name from client) ON cid = KEY.clientid where Key.productid = """ + str(productID)
-                             ).fetchall()
+    from sqlalchemy.orm import joinedload
+    keys = Key.query.filter_by(productid=productID).options(
+        joinedload(Key.registrations)
+    ).all()
+    
+    # Para cada key, adicionar o nome do cliente
+    result = []
+    for key in keys:
+        client = Client.query.filter_by(id=key.clientid).first()
+        # Criar um objeto que combine os dados da key com o nome do cliente
+        key.name = client.name if client else 'Desconhecido'
+        result.append(key)
+    
+    return result
 
 
 def getKeysBySerialKey(serialKey, productID):
