@@ -3,7 +3,7 @@ from flask_httpauth import HTTPTokenAuth
 from flask_login import login_required
 from . import database_api as DBAPI
 
-from .handlers import admins as AdminHandler, customers as CustomerHandler, logs as LogHandler, products as ProductHandler, licenses as LicenseHandler, validation as ValidationHandler
+from .handlers import admins as AdminHandler, customers as CustomerHandler, logs as LogHandler, products as ProductHandler, licenses as LicenseHandler, validation as ValidationHandler, sync as SyncHandler
 
 main = Blueprint('main', __name__)
 auth = HTTPTokenAuth(scheme='Bearer')
@@ -201,9 +201,34 @@ def adminToggleStatus(userid):
     return AdminHandler.toggleAdminStatus(userid)
 
 
+
 ###########################################################################
-# VALIDATION PROCESS
+# SYNC AND DATA MANAGEMENT
 ###########################################################################
-@main.route('/api/v1/validate', methods=['POST'])
-def validate_product():
-    return ValidationHandler.handleValidation(request.get_json())
+@main.route('/api/v1/sync', methods=['POST'])
+def sync_data():
+    return SyncHandler.handleSync(request.get_json())
+
+
+@main.route('/sync-files')
+@login_required
+def sync_files():
+    return SyncHandler.displaySyncFiles()
+
+
+@main.route('/sync-files/<productid>/<licenseid>')
+@login_required
+def sync_details(productid, licenseid):
+    return SyncHandler.listLicenseFiles(productid, licenseid)
+
+
+@main.route('/sync-files/download/<productid>/<licenseid>/<filename>')
+@login_required
+def sync_download(productid, licenseid, filename):
+    return SyncHandler.downloadFile(productid, licenseid, filename)
+
+
+@main.route('/sync-files/delete/<productid>/<licenseid>/<filename>', methods=['POST'])
+@login_required
+def sync_delete(productid, licenseid, filename):
+    return SyncHandler.deleteFile(productid, licenseid, filename)

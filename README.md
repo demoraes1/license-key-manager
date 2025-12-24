@@ -699,6 +699,27 @@ BODY:
 
 **Response** : A `JSON` dictionary array containing four fields. It has a code indicating whether or not the validation succeeded (if the code starts with `ERR_` then the validation failed). It also has a description elaborating the reason why it failed.
 
+---
+
+### Sync
+
+Allows external applications to securely synchronize JSON data to the server. The data is saved and can be managed through the Dashboard.<br/><br/>
+**Path** : `/api/v1/sync`\
+**Method** : `POST`\
+**Authentication required** : NO\
+**Parameters** :
+
+```
+BODY:
+{
+    'apiKey' : 'The API Key of the Product',
+    'payload' : 'A PublicKey-encrypted message containing the Serial Key and HardwareID (serialKey:hardwareID)',
+    'jsonData' : 'The JSON object to be synchronized and stored'
+}
+```
+
+**Response** : A `JSON` dictionary array containing a code and a message indicating the status of the synchronization.
+
 \*`RESPONSE_FORM` - For every single endpoint above, this type of JSON dictionary response carries a CODE and a MESSAGE. The CODE is used by the script to know if the request succeeded. If it didn't, then the javascript will show the server-generated message to the client. Example:
 
 ```json
